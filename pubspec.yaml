@@ -1,0 +1,24 @@
+name: corona_watch
+description: Watching COVID19
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  font_awesome_flutter: ^8.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Arimo
+      fonts:
+        - asset: fonts/Arimo-Regular.ttf
+        - asset: fonts/Arimo-Bold.ttf
+          weight: 700
