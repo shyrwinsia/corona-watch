@@ -34,9 +34,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Map<String, double> dataMap = new Map();
 
   _MyHomePageState() {
-    dataMap.putIfAbsent("suspect", () => 52391);
+    dataMap.putIfAbsent("suspect", () => 56391);
     dataMap.putIfAbsent("sick", () => 29389);
-    dataMap.putIfAbsent("dead", () => 7234);
+    dataMap.putIfAbsent("dead", () => 4234);
     dataMap.putIfAbsent("ok", () => 1345);
   }
 
@@ -86,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       chartRadius: MediaQuery.of(context).size.width / 1.5,
                       showChartValuesInPercentage: true,
                       showChartValues: false,
-                      showChartValuesOutside: false,
+                      showChartValuesOutside: true,
                       chartValueBackgroundColor: Colors.grey[200],
                       colorList: [
                         Color(0xff8fa7f4),
@@ -102,13 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       chartValueStyle: TextStyle(
                         color: Colors.white,
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 8),
-                      child: Text('Worldwide',
-                          style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white.withOpacity(0.6))),
+                      title: 'Worldwide',
                     ),
                   ],
                 ),
@@ -122,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 8,
                     ),
                     statTile(FontAwesomeIcons.search, const Color(0xff8fa7f4),
-                        'Suspected', '52,391'),
+                        'Suspected', '56,391'),
                     SizedBox(
                       height: 8,
                     ),
@@ -132,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: 8,
                     ),
                     statTile(FontAwesomeIcons.skull, const Color(0xffff653b),
-                        'Deaths', '7,234'),
+                        'Deaths', '4,234'),
                     SizedBox(
                       height: 8,
                     ),
