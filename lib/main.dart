@@ -82,12 +82,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     PieChart(
                       dataMap: dataMap,
                       animationDuration: Duration(milliseconds: 800),
-                      chartLegendSpacing: 32.0,
-                      chartRadius: MediaQuery.of(context).size.width / 1.5,
+                      chartRadius: MediaQuery.of(context).size.width / 1.4,
                       showChartValuesInPercentage: true,
                       showChartValues: false,
                       showChartValuesOutside: true,
-                      chartValueBackgroundColor: Colors.grey[200],
                       colorList: [
                         Color(0xff8fa7f4),
                         Color(0xfff5c76a),
@@ -97,10 +95,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       showLegends: false,
                       decimalPlaces: 1,
                       showChartValueLabel: true,
-                      initialAngle: 0,
+                      initialAngle: 0.5,
                       chartType: ChartType.ring,
                       chartValueStyle: TextStyle(
-                        color: Colors.white,
+                        color: Colors.white.withOpacity(0.6),
                       ),
                       title: 'Worldwide',
                     ),
