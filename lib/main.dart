@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    statTile(const Color(0xff18dcf8), 'Total Cases', '89,230'),
+                    statTile(const Color(0xffffffff), 'Total Cases', '89,230'),
                     SizedBox(
                       height: 8,
                     ),
