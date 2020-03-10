@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'chart/pie_chart.dart';
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -62,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
             actions: <Widget>[
               IconButton(
                   icon: Icon(
-                    FontAwesomeIcons.filter,
+                    FeatherIcons.filter,
                     color: Colors.white,
                     size: 16,
                   ),
@@ -110,28 +110,23 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    statTile(FontAwesomeIcons.globe, const Color(0xff18dcf8),
-                        'Total Cases', '89,230'),
+                    statTile(const Color(0xff18dcf8), 'Total Cases', '89,230'),
                     SizedBox(
                       height: 8,
                     ),
-                    statTile(FontAwesomeIcons.search, const Color(0xff8fa7f4),
-                        'Suspected', '56,391'),
+                    statTile(const Color(0xff8fa7f4), 'Suspected', '56,391'),
                     SizedBox(
                       height: 8,
                     ),
-                    statTile(FontAwesomeIcons.check, const Color(0xfff5c76a),
-                        'Confirmed', '29,389'),
+                    statTile(const Color(0xfff5c76a), 'Confirmed', '29,389'),
                     SizedBox(
                       height: 8,
                     ),
-                    statTile(FontAwesomeIcons.skull, const Color(0xffff653b),
-                        'Deaths', '4,234'),
+                    statTile(const Color(0xffff653b), 'Deaths', '4,234'),
                     SizedBox(
                       height: 8,
                     ),
-                    statTile(FontAwesomeIcons.solidHeart,
-                        const Color(0xff9ff794), 'Recovered', '1,345'),
+                    statTile(const Color(0xff9ff794), 'Recovered', '1,345'),
                   ],
                 ),
                 Text(
@@ -147,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget statTile(IconData icon, Color color, String label, String value) {
+  Widget statTile(Color color, String label, String value) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
       decoration: BoxDecoration(
@@ -163,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Icon(FontAwesomeIcons.solidCircle,
+              Icon(FeatherIcons.circle,
                   color: color.withOpacity(0.8), size: 10),
               SizedBox(
                 width: 6,
