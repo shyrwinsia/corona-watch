@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import 'chart/pie_chart.dart';
+
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(statusBarColor: Colors.transparent));
@@ -29,6 +31,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Map<String, double> dataMap = new Map();
+
+  _MyHomePageState() {
+    dataMap.putIfAbsent("suspect", () => 52391);
+    dataMap.putIfAbsent("sick", () => 29389);
+    dataMap.putIfAbsent("dead", () => 7234);
+    dataMap.putIfAbsent("ok", () => 1345);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -36,12 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
         Container(
           height: double.infinity,
           width: double.infinity,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [const Color(0xff35436e), const Color(0xff37607e)]),
-          ),
+          decoration: BoxDecoration(color: Colors.black),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
@@ -53,34 +59,92 @@ class _MyHomePageState extends State<MyHomePage> {
             centerTitle: true,
             backgroundColor: Colors.transparent,
             elevation: 0.0,
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(
+                    FontAwesomeIcons.filter,
+                    color: Colors.white,
+                    size: 16,
+                  ),
+                  onPressed: () {})
+            ],
           ),
           body: Container(
-            padding: EdgeInsets.symmetric(horizontal: 12),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                statTile(FontAwesomeIcons.globe, Colors.white, 'Total Cases',
-                    '89,230'),
-                SizedBox(
-                  height: 8,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    PieChart(
+                      dataMap: dataMap,
+                      animationDuration: Duration(milliseconds: 800),
+                      chartLegendSpacing: 32.0,
+                      chartRadius: MediaQuery.of(context).size.width / 1.5,
+                      showChartValuesInPercentage: true,
+                      showChartValues: false,
+                      showChartValuesOutside: false,
+                      chartValueBackgroundColor: Colors.grey[200],
+                      colorList: [
+                        Color(0xff8fa7f4),
+                        Color(0xfff5c76a),
+                        Color(0xffff653b),
+                        Color(0xff9ff794)
+                      ],
+                      showLegends: false,
+                      decimalPlaces: 1,
+                      showChartValueLabel: true,
+                      initialAngle: 0,
+                      chartType: ChartType.ring,
+                      chartValueStyle: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: Text('Worldwide',
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white.withOpacity(0.6))),
+                    ),
+                  ],
                 ),
-                statTile(FontAwesomeIcons.search, Colors.amberAccent,
-                    'Suspected', '52,391'),
-                SizedBox(
-                  height: 8,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    statTile(FontAwesomeIcons.globe, const Color(0xff18dcf8),
+                        'Total Cases', '89,230'),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    statTile(FontAwesomeIcons.search, const Color(0xff8fa7f4),
+                        'Suspected', '52,391'),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    statTile(FontAwesomeIcons.check, const Color(0xfff5c76a),
+                        'Confirmed', '29,389'),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    statTile(FontAwesomeIcons.skull, const Color(0xffff653b),
+                        'Deaths', '7,234'),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    statTile(FontAwesomeIcons.solidHeart,
+                        const Color(0xff9ff794), 'Recovered', '1,345'),
+                  ],
                 ),
-                statTile(FontAwesomeIcons.check, Colors.orange, 'Confirmed',
-                    '29,389'),
-                SizedBox(
-                  height: 8,
+                Text(
+                  'Last fetched 4 minutes ago',
+                  style: TextStyle(
+                      fontSize: 10, color: Colors.white.withOpacity(.4)),
                 ),
-                statTile(FontAwesomeIcons.skull, Colors.red, 'Deaths', '7,234'),
-                SizedBox(
-                  height: 8,
-                ),
-                statTile(FontAwesomeIcons.solidHeart, Colors.green, 'Recovered',
-                    '1,345')
               ],
             ),
           ),
@@ -91,36 +155,36 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget statTile(IconData icon, Color color, String label, String value) {
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(10),
-        borderRadius: new BorderRadius.all(new Radius.circular(8)),
+        border: Border(
+          bottom: BorderSide(width: 1.0, color: Colors.white10),
+        ),
       ),
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Icon(
-            icon,
-            color: color.withOpacity(0.8),
-            size: 42,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text(
-                value,
-                style: TextStyle(fontSize: 42, color: color),
-              ),
+              Icon(FontAwesomeIcons.solidCircle,
+                  color: color.withOpacity(0.8), size: 10),
               SizedBox(
-                height: 2,
+                width: 6,
               ),
               Text(
                 label,
-                style: TextStyle(fontSize: 12, color: color.withOpacity(.8)),
-              )
+                style: TextStyle(
+                    fontSize: 14, color: Colors.white.withOpacity(.6)),
+              ),
             ],
+          ),
+          Text(
+            value,
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           ),
         ],
       ),
@@ -128,6 +192,23 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// Column(
+//   mainAxisAlignment: MainAxisAlignment.center,
+//   crossAxisAlignment: CrossAxisAlignment.end,
+//   children: <Widget>[
+//     Text(
+//       value,
+//       style: TextStyle(fontSize: 42, color: color),
+//     ),
+//     SizedBox(
+//       height: 2,
+//     ),
+//     Text(
+//       label,
+//       style: TextStyle(fontSize: 12, color: color.withOpacity(.8)),
+//     )
+//   ],
+// ),
 // Column(
 //   children: <Widget>[
 //     SizedBox(
