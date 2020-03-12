@@ -60,7 +60,7 @@ class PieChartPainter extends CustomPainter {
         chartType == ChartType.disc ? true : false,
         _paintList[i],
       );
-      final radius = showChartValuesOutside ? side * 0.5 : side / 3;
+      final radius = showChartValuesOutside ? side * 0.52 : side / 3;
       final x = (radius) *
           math.cos(
               _prevAngle + ((((_totalAngle) / _total) * _subParts[i]) / 2));
@@ -81,7 +81,7 @@ class PieChartPainter extends CustomPainter {
 
     TextSpan span = TextSpan(
       style: TextStyle(
-        color: Colors.white.withOpacity(0.4),
+        color: Colors.white.withOpacity(0.6),
         fontWeight: FontWeight.bold,
         fontSize: 18,
       ),

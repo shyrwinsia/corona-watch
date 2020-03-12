@@ -1,9 +1,7 @@
-import 'dart:convert';
-
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:corona_watch/api.dart';
+import 'package:corona_watch/model.dart';
+import 'package:corona_watch/graph.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'chart/pie_chart.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,13 +9,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<StatsGlobal> statsGlobalFuture;
-  Map<String, double> dataMap = new Map();
+  Future<Stats> statsFuture;
 
   @override
   void initState() {
     super.initState();
-    fetch();
+    statsFuture = RestApi.fetch();
   }
 
   @override
@@ -32,23 +29,14 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                FeatherIcons.refreshCw,
-                color: Colors.white,
-                size: 16,
-              ),
-              onPressed: () => fetch())
-        ],
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: FutureBuilder<StatsGlobal>(
-          future: statsGlobalFuture,
+        child: FutureBuilder<Stats>(
+          future: statsFuture,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return buildGlobalStats(snapshot.data);
+              return buildGlobalStats(snapshot.data.globalStats);
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             } else {
@@ -58,8 +46,7 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(
-                      valueColor:
-                          new AlwaysStoppedAnimation<Color>(Colors.white24),
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
                     SizedBox(height: 16),
                     Text(
@@ -72,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       'Source: worldometers.info',
                       style: TextStyle(
-                          fontSize: 10, color: Colors.white.withOpacity(.4)),
+                          fontSize: 12, color: Colors.white.withOpacity(.6)),
                     ),
                   ],
                 ),
@@ -84,173 +71,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buildGlobalStats(StatsGlobal stats) {
-    setGraphData(stats);
+  Widget buildGlobalStats(GlobalStats stats) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            PieChart(
-              dataMap: dataMap,
-              animationDuration: Duration(milliseconds: 800),
-              chartRadius: MediaQuery.of(context).size.width / 1.4,
-              showChartValuesInPercentage: true,
-              showChartValues: false,
-              showChartValuesOutside: true,
-              colorList: [
-                Color(0xfff5c76a),
-                Color(0xffff653b),
-                Color(0xff9ff794)
-              ],
-              showLegends: false,
-              decimalPlaces: 1,
-              showChartValueLabel: true,
-              initialAngle: 5,
-              chartType: ChartType.ring,
-              chartValueStyle: TextStyle(
-                color: Colors.white.withOpacity(0.6),
-              ),
-              title: 'Worldwide',
-            ),
-          ],
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            statTile(
-                const Color(0xffffffff), 'Total Cases', stats.cases.toString()),
-            SizedBox(
-              height: 8,
-            ),
-            statTile(
-                const Color(0xfff5c76a), 'Active', stats.active.toString()),
-            SizedBox(
-              height: 8,
-            ),
-            statTile(
-                const Color(0xffff653b), 'Deaths', stats.deaths.toString()),
-            SizedBox(
-              height: 8,
-            ),
-            statTile(const Color(0xff9ff794), 'Recovered',
-                stats.recovered.toString()),
-          ],
-        ),
+        Graph(stats),
         FlatButton(
-          child: Text('See Countries',
-              style: TextStyle(color: const Color(0xff8fa7f4))),
+          child:
+              Text('See Countries', style: TextStyle(color: Color(0xff8fa7f4))),
           onPressed: () {},
         ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Last fetched 4 minutes ago',
-              style:
-                  TextStyle(fontSize: 10, color: Colors.white.withOpacity(.4)),
-            ),
-            SizedBox(
-              height: 2,
-            ),
-            Text(
-              'Source: worldometers.info',
-              style:
-                  TextStyle(fontSize: 10, color: Colors.white.withOpacity(.2)),
-            ),
-          ],
+        Text(
+          'Last fetched 4 minutes ago',
+          style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(.6)),
         ),
       ],
-    );
-  }
-
-  void setGraphData(StatsGlobal stats) {
-    dataMap.putIfAbsent("active", () => stats.active.toDouble());
-    dataMap.putIfAbsent("dead", () => stats.deaths.toDouble());
-    dataMap.putIfAbsent("ok", () => stats.recovered.toDouble());
-  }
-
-  Widget statTile(Color color, String label, String value) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(width: 1.0, color: Colors.white10),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Icon(FeatherIcons.circle,
-                  color: color.withOpacity(0.8), size: 10),
-              SizedBox(
-                width: 6,
-              ),
-              Text(
-                label,
-                style: TextStyle(
-                    fontSize: 14, color: Colors.white.withOpacity(.6)),
-              ),
-            ],
-          ),
-          Text(
-            value,
-            style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void fetch() {
-    statsGlobalFuture = fetchGlobal();
-    fetchGlobal();
-  }
-
-  Future<StatsGlobal> fetchGlobal() async {
-    final response = await http.get('https://corona.lmao.ninja/all');
-
-    if (response.statusCode == 200) {
-      return StatsGlobal.fromJson(json.decode(response.body));
-    } else {
-      throw Exception('Request failed with status: ${response.statusCode}.');
-    }
-  }
-
-  Future<void> fetchCountries() async {
-    final response = await http.get('https://corona.lmao.ninja/countries');
-    print(response.body);
-  }
-}
-
-class StatsGlobal {
-  final int cases;
-  final int active;
-  final int deaths;
-  final int recovered;
-
-  StatsGlobal({
-    this.cases,
-    this.deaths,
-    this.recovered,
-  }) : this.active = cases - deaths - recovered;
-
-  factory StatsGlobal.fromJson(Map<String, dynamic> json) {
-    return StatsGlobal(
-      cases: json['cases'],
-      deaths: json['deaths'],
-      recovered: json['recovered'],
     );
   }
 }
@@ -260,8 +96,8 @@ class StatsGlobal {
 // [x] change refresh to button
 // [ ] make the manual refresh work
 // [ ] error for no connection
-// [ ] prevent landscape
-// [ ] make private function
+// [x] prevent landscape
+// [x] make private function
 // [ ] add last fetch
 // [ ] add fuzzy time
 // [ ] add countries
