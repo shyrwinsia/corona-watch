@@ -4,10 +4,10 @@ import 'package:covidwatch/model.dart';
 import 'package:http/http.dart' as http;
 
 class RestApi {
-  // static const URL_ALL = 'https://corona.lmao.ninja/all';
-  // static const URL_COUNTRIES = 'https://corona.lmao.ninja/countries';
-  static const URL_ALL = 'http://192.168.1.123:3000/all';
-  static const URL_COUNTRIES = 'http://192.168.1.123:3000/countries';
+  static const URL_ALL = 'https://corona.lmao.ninja/all';
+  static const URL_COUNTRIES = 'https://corona.lmao.ninja/countries';
+  // static const URL_ALL = 'http://192.168.1.123:3000/all';
+  // static const URL_COUNTRIES = 'http://192.168.1.123:3000/countries';
 
   static Future<GlobalStats> fetchGlobal() async {
     final response = await http.get(URL_ALL);
