@@ -1,4 +1,4 @@
-import 'package:corona_watch/model.dart';
+import 'package:covidwatch/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +19,7 @@ class Graph extends StatelessWidget {
     return Column(
       children: <Widget>[
         _buildGraph(context),
+        SizedBox(height: 32),
         _statTile(Color(0xffffffff), 'Total Cases', stats.cases.toString()),
         _statTile(Color(0xfff5c76a), 'Infected', stats.active.toString()),
         _statTile(Color(0xffff653b), 'Dead', stats.deaths.toString()),

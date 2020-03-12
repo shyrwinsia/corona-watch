@@ -1,8 +1,8 @@
+import 'package:covidwatch/main.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:corona_watch/main.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    await tester.pumpWidget(CoronaWatch());
+    await tester.pumpWidget(CovidWatch());
   });
 }

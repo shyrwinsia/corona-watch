@@ -1,4 +1,4 @@
-import 'package:corona_watch/home.dart';
+import 'package:covidwatch/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -10,11 +10,11 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    runApp(CoronaWatch());
+    runApp(CovidWatch());
   });
 }
 
-class CoronaWatch extends StatelessWidget {
+class CovidWatch extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

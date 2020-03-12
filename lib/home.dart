@@ -1,6 +1,9 @@
-import 'package:corona_watch/api.dart';
-import 'package:corona_watch/model.dart';
-import 'package:corona_watch/graph.dart';
+import 'dart:async';
+
+import 'package:covidwatch/api.dart';
+import 'package:covidwatch/graph.dart';
+import 'package:covidwatch/model.dart';
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -9,12 +12,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<Stats> statsFuture;
+  final StreamController<GlobalStats> stats = StreamController();
 
   @override
   void initState() {
     super.initState();
-    statsFuture = RestApi.fetch();
+    _fetch();
   }
 
   @override
@@ -29,16 +32,31 @@ class _HomePageState extends State<HomePage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(FeatherIcons.refreshCw),
+              iconSize: 16,
+              onPressed: () => _fetch())
+        ],
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: FutureBuilder<Stats>(
-          future: statsFuture,
+        child: StreamBuilder<GlobalStats>(
+          stream: stats.stream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return buildGlobalStats(snapshot.data.globalStats);
+              return buildGlobalStats(snapshot.data);
             } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.all(24),
+                  child: Text(
+                    "${snapshot.error}",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white, fontSize: 24),
+                  ),
+                ),
+              );
             } else {
               return Center(
                 child: Column(
@@ -50,8 +68,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                     SizedBox(height: 16),
                     Text(
-                      'Fetching data',
-                      style: TextStyle(fontSize: 16, color: Colors.white),
+                      'Fetching latest updates',
+                      style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                     SizedBox(
                       height: 4,
@@ -78,26 +96,35 @@ class _HomePageState extends State<HomePage> {
       children: <Widget>[
         Graph(stats),
         FlatButton(
-          child:
-              Text('See Countries', style: TextStyle(color: Color(0xff8fa7f4))),
+          child: Text('View countries',
+              style: TextStyle(color: Color(0xff8fa7f4))),
           onPressed: () {},
-        ),
-        Text(
-          'Last fetched 4 minutes ago',
-          style: TextStyle(fontSize: 10, color: Colors.white.withOpacity(.6)),
         ),
       ],
     );
+  }
+
+  void _fetch() async {
+    stats.add(null);
+    await RestApi.fetchGlobal().catchError((onError) {
+      print('Some error occured');
+      stats.addError(onError);
+    }).then((globalStats) => stats.add(globalStats));
+  }
+
+  @override
+  void dispose() {
+    stats.close();
+    super.dispose();
   }
 }
 
 // TODO
 // [x] change circular progress color
 // [x] change refresh to button
-// [ ] make the manual refresh work
+// [x] make the manual refresh work
+// [ ] black splash screen
 // [ ] error for no connection
 // [x] prevent landscape
 // [x] make private function
-// [ ] add last fetch
-// [ ] add fuzzy time
 // [ ] add countries

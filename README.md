@@ -1,1 +1,1 @@
-Coronavirus Watch
+COVID Watch

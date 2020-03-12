@@ -1,4 +1,4 @@
-package com.example.corona_watch
+package dev.ssia.covidwatch
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
