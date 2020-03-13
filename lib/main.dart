@@ -21,7 +21,8 @@ class CovidWatch extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Arimo',
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
+        brightness: Brightness.dark,
       ),
       home: HomePage(),
     );

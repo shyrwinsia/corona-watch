@@ -19,7 +19,49 @@ class GlobalStats {
   }
 }
 
-class CountryStats {}
+class CountryList {
+  final List<CountryStats> list;
+
+  CountryList({this.list});
+
+  factory CountryList.fromJson(List<dynamic> json) {
+    List<CountryStats> list = List();
+    for (Map<String, dynamic> item in json) {
+      list.add(CountryStats.fromJson(item));
+    }
+    return CountryList(list: list);
+  }
+}
+
+class CountryStats {
+  final String country;
+  final int cases;
+  final int deaths;
+  final int todayCases;
+  final int todayDeaths;
+  final int recovered;
+  final int active;
+
+  CountryStats({
+    this.country,
+    this.cases = 0,
+    this.deaths = 0,
+    this.todayCases = 0,
+    this.todayDeaths = 0,
+    this.recovered = 0,
+  }) : this.active = cases - deaths - recovered;
+
+  factory CountryStats.fromJson(Map<String, dynamic> json) {
+    return CountryStats(
+      country: json['country'],
+      cases: json['cases'],
+      deaths: json['deaths'],
+      todayCases: json['todayCases'],
+      todayDeaths: json['todayDeaths'],
+      recovered: json['recovered'],
+    );
+  }
+}
 
 class Stats {
   final DateTime lastFetch;

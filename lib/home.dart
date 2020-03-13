@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:covidwatch/api.dart';
+import 'package:covidwatch/countries.dart';
 import 'package:covidwatch/graph.dart';
 import 'package:covidwatch/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
@@ -13,6 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final StreamController<GlobalStats> stats = StreamController();
+  bool _isLoading;
 
   @override
   void initState() {
@@ -33,10 +35,12 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: <Widget>[
-          IconButton(
-              icon: Icon(FeatherIcons.refreshCw),
-              iconSize: 16,
-              onPressed: () => _fetch())
+          _isLoading
+              ? Container()
+              : IconButton(
+                  icon: Icon(FeatherIcons.refreshCw),
+                  iconSize: 16,
+                  onPressed: () => _fetch()),
         ],
       ),
       body: Container(
@@ -66,10 +70,10 @@ class _HomePageState extends State<HomePage> {
                     CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 24),
                     Text(
                       'Fetching latest updates',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
+                      style: TextStyle(fontSize: 14, color: Colors.white),
                     ),
                     SizedBox(
                       height: 4,
@@ -94,22 +98,34 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        Graph(stats),
+        GlobalGraph(stats),
         FlatButton(
-          child: Text('View countries',
-              style: TextStyle(color: Color(0xff8fa7f4))),
-          onPressed: () {},
-        ),
+            child: Text('View countries',
+                style: TextStyle(color: Color(0xff8fa7f4))),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CountriesPage()))),
       ],
     );
   }
 
   void _fetch() async {
     stats.add(null);
-    await RestApi.fetchGlobal().catchError((onError) {
-      print('Some error occured');
-      stats.addError(onError);
-    }).then((globalStats) => stats.add(globalStats));
+    setState(() {
+      _isLoading = true;
+    });
+    await RestApi.fetchGlobal()
+        .catchError(
+          (onError) {
+            print('Some error occured');
+            stats.addError(onError);
+          },
+        )
+        .then((globalStats) => stats.add(globalStats))
+        .then(
+          (onValue) => setState(() {
+            _isLoading = false;
+          }),
+        );
   }
 
   @override
@@ -123,8 +139,8 @@ class _HomePageState extends State<HomePage> {
 // [x] change circular progress color
 // [x] change refresh to button
 // [x] make the manual refresh work
-// [ ] black splash screen
+// [x] black splash screen
 // [ ] error for no connection
 // [x] prevent landscape
 // [x] make private function
-// [ ] add countries
+// [x] add countries
