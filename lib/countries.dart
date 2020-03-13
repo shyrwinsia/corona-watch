@@ -13,6 +13,7 @@ class CountriesPage extends StatefulWidget {
 
 class _CountriesPageState extends State<CountriesPage> {
   final StreamController<CountryList> stats = StreamController();
+  List<CountryStats> current = List();
 
   @override
   void initState() {
@@ -36,6 +37,15 @@ class _CountriesPageState extends State<CountriesPage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Sort'),
+            onPressed: () {
+              current.sort((a, b) => a.country.compareTo(b.country));
+              stats.add(CountryList(list: current));
+            },
+          )
+        ],
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
@@ -43,6 +53,7 @@ class _CountriesPageState extends State<CountriesPage> {
           stream: stats.stream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              this.current = snapshot.data.list;
               return ListView.separated(
                   itemCount: snapshot.data.list.length,
                   separatorBuilder: (BuildContext context, int index) =>
@@ -169,5 +180,3 @@ class _CountriesPageState extends State<CountriesPage> {
     super.dispose();
   }
 }
-
-// total cases, alphabetical, new cases today, new deaths today
