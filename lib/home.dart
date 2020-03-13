@@ -28,7 +28,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          "COVID-19 STATISTICS",
+          "COVID WATCH",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         centerTitle: true,
