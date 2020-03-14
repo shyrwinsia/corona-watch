@@ -115,125 +115,120 @@ class _CountriesPageState extends State<CountriesPage> {
         ),
       ),
       child: Container(
-          padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                stats.country,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-              SizedBox(
-                height: 14,
-              ),
-              Row(
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              stats.country,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+            SizedBox(
+              height: 14,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                    Text(
+                      stats.cases.toString().replaceAllMapped(reg, mathFunc),
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                    Text(
+                      "Total Cases",
+                      style: TextStyle(
+                          fontSize: 10, color: Colors.white.withOpacity(0.6)),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
                       children: <Widget>[
                         Text(
-                          stats.cases
+                          stats.active
                               .toString()
                               .replaceAllMapped(reg, mathFunc),
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
+                        SizedBox(width: 2),
                         Text(
-                          "Total Cases",
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.white.withOpacity(0.6)),
+                          "+${stats.todayCases.toString().replaceAllMapped(reg, mathFunc)}",
+                          style: TextStyle(fontSize: 10, color: Colors.white),
                         ),
                       ],
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
-                          children: <Widget>[
-                            Text(
-                              stats.active
-                                  .toString()
-                                  .replaceAllMapped(reg, mathFunc),
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                            SizedBox(width: 2),
-                            Text(
-                              "+${stats.todayCases.toString().replaceAllMapped(reg, mathFunc)}",
-                              style:
-                                  TextStyle(fontSize: 10, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "Active",
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: Color(0xfff5c76a).withOpacity(0.8)),
-                        ),
-                      ],
+                    Text(
+                      "Active",
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Color(0xfff5c76a).withOpacity(0.8)),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
-                          children: <Widget>[
-                            Text(
-                              stats.deaths
-                                  .toString()
-                                  .replaceAllMapped(reg, mathFunc),
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
-                            ),
-                            SizedBox(width: 2),
-                            Text(
-                              "+${stats.todayDeaths.toString().replaceAllMapped(reg, mathFunc)}",
-                              style:
-                                  TextStyle(fontSize: 10, color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          "Deaths",
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: Color(0xffff653b).withOpacity(0.8)),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
                       children: <Widget>[
                         Text(
-                          stats.recovered
+                          stats.deaths
                               .toString()
                               .replaceAllMapped(reg, mathFunc),
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
+                        SizedBox(width: 2),
                         Text(
-                          "Recovered",
-                          style: TextStyle(
-                              fontSize: 10,
-                              color: Color(0xff9ff794).withOpacity(0.6)),
+                          "+${stats.todayDeaths.toString().replaceAllMapped(reg, mathFunc)}",
+                          style: TextStyle(fontSize: 10, color: Colors.white),
                         ),
                       ],
                     ),
-                  ])
-            ],
-          )),
+                    Text(
+                      "Deaths",
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Color(0xffff653b).withOpacity(0.8)),
+                    ),
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      stats.recovered
+                          .toString()
+                          .replaceAllMapped(reg, mathFunc),
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                    Text(
+                      "Recovered",
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Color(0xff9ff794).withOpacity(0.6)),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 
