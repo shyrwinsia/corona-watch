@@ -117,7 +117,7 @@ class _CountriesPageState extends State<CountriesPage> {
   }
 
   Widget _buildTile(CountryStats stats) {
-    RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
     Function mathFunc = (Match match) => '${match[1]},';
 
     return InkWell(
@@ -128,9 +128,9 @@ class _CountriesPageState extends State<CountriesPage> {
         ),
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
@@ -138,7 +138,7 @@ class _CountriesPageState extends State<CountriesPage> {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
             ),
             SizedBox(
-              height: 14,
+              height: 16,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -163,28 +163,37 @@ class _CountriesPageState extends State<CountriesPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: <Widget>[
-                        Text(
-                          stats.active
-                              .toString()
-                              .replaceAllMapped(reg, mathFunc),
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                        SizedBox(width: 2),
-                        Icon(
-                          FeatherIcons.arrowUp,
-                          size: 10,
-                        ),
-                        Text(
-                          "${stats.todayCases.toString().replaceAllMapped(reg, mathFunc)}",
-                          style: TextStyle(fontSize: 10, color: Colors.white),
-                        ),
-                      ],
-                    ),
+                    (stats.todayCases != 0)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: <Widget>[
+                              Text(
+                                stats.active
+                                    .toString()
+                                    .replaceAllMapped(reg, mathFunc),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              SizedBox(width: 2),
+                              Icon(
+                                FeatherIcons.arrowUp,
+                                size: 10,
+                              ),
+                              Text(
+                                "${stats.todayCases.toString().replaceAllMapped(reg, mathFunc)}",
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.white),
+                              ),
+                            ],
+                          )
+                        : Text(
+                            stats.active
+                                .toString()
+                                .replaceAllMapped(reg, mathFunc),
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
                     Text(
                       "Active",
                       style: TextStyle(
@@ -197,28 +206,37 @@ class _CountriesPageState extends State<CountriesPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: <Widget>[
-                        Text(
-                          stats.deaths
-                              .toString()
-                              .replaceAllMapped(reg, mathFunc),
-                          style: TextStyle(fontSize: 16, color: Colors.white),
-                        ),
-                        SizedBox(width: 2),
-                        Icon(
-                          FeatherIcons.arrowUp,
-                          size: 10,
-                        ),
-                        Text(
-                          "${stats.todayDeaths.toString().replaceAllMapped(reg, mathFunc)}",
-                          style: TextStyle(fontSize: 10, color: Colors.white),
-                        ),
-                      ],
-                    ),
+                    (stats.todayDeaths != 0)
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: <Widget>[
+                              Text(
+                                stats.deaths
+                                    .toString()
+                                    .replaceAllMapped(reg, mathFunc),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
+                              ),
+                              SizedBox(width: 2),
+                              Icon(
+                                FeatherIcons.arrowUp,
+                                size: 10,
+                              ),
+                              Text(
+                                "${stats.todayDeaths.toString().replaceAllMapped(reg, mathFunc)}",
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.white),
+                              ),
+                            ],
+                          )
+                        : Text(
+                            stats.deaths
+                                .toString()
+                                .replaceAllMapped(reg, mathFunc),
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
                     Text(
                       "Deaths",
                       style: TextStyle(

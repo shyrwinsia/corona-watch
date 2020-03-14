@@ -54,7 +54,7 @@ class PieChartPainter extends CustomPainter {
     _prevAngle = this.initialAngle;
     for (int i = 0; i < _subParts.length; i++) {
       canvas.drawArc(
-        new Rect.fromLTWH(0.0, 0.0, side, size.height),
+        Rect.fromLTWH(0.0, 0.0, side, size.height),
         _prevAngle,
         (((_totalAngle) / _total) * _subParts[i]),
         chartType == ChartType.disc ? true : false,
@@ -97,7 +97,7 @@ class PieChartPainter extends CustomPainter {
     //Finally paint the text above box
     tp.paint(
       canvas,
-      new Offset(
+      Offset(
         (side / 2) - (tp.width / 2),
         (side / 2) - (tp.height / 2),
       ),
@@ -127,7 +127,7 @@ class PieChartPainter extends CustomPainter {
     //Finally paint the text above box
     tp.paint(
       canvas,
-      new Offset(
+      Offset(
         (side / 2 + x / 0.84) - (tp.width / 2),
         (side / 2 + y / 0.84) - (tp.height / 2),
       ),

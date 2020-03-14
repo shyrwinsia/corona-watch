@@ -59,76 +59,40 @@ class _SortbyDialogState extends State<SortbyDialog> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  'Sort by',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
+                Text('Sort by',
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
                 SizedBox(height: 8),
                 RadioListTile<SortBy>(
-                  title: Text(
-                    'Total Cases',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  title: Text('Total Cases', style: TextStyle(fontSize: 12)),
                   value: SortBy.total,
                   groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
+                  onChanged: _setSortChoice,
                   activeColor: Color(0xff8fa7f4),
                 ),
                 RadioListTile<SortBy>(
-                  title: const Text(
-                    'Active',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  title: Text('Active', style: TextStyle(fontSize: 12)),
                   value: SortBy.active,
                   groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
+                  onChanged: _setSortChoice,
                   activeColor: Color(0xff8fa7f4),
                 ),
                 RadioListTile<SortBy>(
-                  title: const Text(
-                    'Deaths',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  title: Text('Deaths', style: TextStyle(fontSize: 12)),
                   value: SortBy.deaths,
                   groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
+                  onChanged: _setSortChoice,
                   activeColor: Color(0xff8fa7f4),
                 ),
                 RadioListTile<SortBy>(
-                  title: const Text(
-                    'New Active',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  title: Text('New Active', style: TextStyle(fontSize: 12)),
                   value: SortBy.todayActive,
                   groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
+                  onChanged: _setSortChoice,
                   activeColor: Color(0xff8fa7f4),
                 ),
                 RadioListTile<SortBy>(
-                  title: const Text(
-                    'New Deaths',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  title: Text('New Deaths', style: TextStyle(fontSize: 12)),
                   value: SortBy.todayDeaths,
                   groupValue: _sortBy,
                   onChanged: (value) {
@@ -140,33 +104,17 @@ class _SortbyDialogState extends State<SortbyDialog> {
                   activeColor: Color(0xff8fa7f4),
                 ),
                 RadioListTile<SortBy>(
-                  title: const Text(
-                    'Recovered',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  title: Text('Recovered', style: TextStyle(fontSize: 12)),
                   value: SortBy.recovered,
                   groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
+                  onChanged: _setSortChoice,
                   activeColor: Color(0xff8fa7f4),
                 ),
                 RadioListTile<SortBy>(
-                  title: const Text(
-                    'Alphabetical',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  title: Text('Alphabetical', style: TextStyle(fontSize: 12)),
                   value: SortBy.alphabetical,
                   groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
+                  onChanged: _setSortChoice,
                   activeColor: Color(0xff8fa7f4),
                 ),
               ],
@@ -177,40 +125,12 @@ class _SortbyDialogState extends State<SortbyDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Order',
+                  'Order by',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 SizedBox(height: 8),
-                RadioListTile<OrderBy>(
-                  title: Text(
-                    'Decending',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: OrderBy.desc,
-                  groupValue: _orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _orderBy = value;
-                      print(_orderBy);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<OrderBy>(
-                  title: Text(
-                    'Ascending',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: OrderBy.asc,
-                  groupValue: _orderBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _orderBy = value;
-                      print(_orderBy);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
+                _buildOrderByChoice('Highest first', OrderBy.desc),
+                _buildOrderByChoice('Lowest  first', OrderBy.asc),
               ],
             ),
             SizedBox(
@@ -220,21 +140,13 @@ class _SortbyDialogState extends State<SortbyDialog> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 FlatButton(
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  child: Text('Cancel', style: TextStyle(fontSize: 12)),
+                  onPressed: () => Navigator.of(context).pop(),
                 ),
                 SizedBox(width: 12),
                 FlatButton(
                   color: Color(0xff8fa7f4),
-                  child: Text(
-                    'Sort',
-                    style: TextStyle(fontSize: 12),
-                  ),
+                  child: Text('Sort', style: TextStyle(fontSize: 12)),
                   onPressed: () {
                     // do sort with params
                     this.widget.stateSetter(_sortBy, _orderBy);
@@ -283,11 +195,32 @@ class _SortbyDialogState extends State<SortbyDialog> {
         widget.list.sort((a, b) => b.recovered - a.recovered);
     } else if (SortBy.alphabetical == _sortBy) {
       if (OrderBy.asc == _orderBy)
-        widget.list.sort((a, b) => a.country.compareTo(b.country));
-      else
         widget.list.sort((a, b) => b.country.compareTo(a.country));
+      else
+        widget.list.sort((a, b) => a.country.compareTo(b.country));
     }
 
     widget.controller.add(CountryList(list: widget.list));
+  }
+
+  void _setOrderChoice(value) {
+    setState(() => _orderBy = value);
+  }
+
+  void _setSortChoice(value) {
+    setState(() => _sortBy = value);
+  }
+
+  Widget _buildOrderByChoice(String title, OrderBy value) {
+    return RadioListTile<OrderBy>(
+      title: Text(
+        title,
+        style: TextStyle(fontSize: 12),
+      ),
+      value: value,
+      groupValue: _orderBy,
+      onChanged: _setOrderChoice,
+      activeColor: Color(0xff8fa7f4),
+    );
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'chart/pie_chart.dart';
 
 class GlobalGraph extends StatelessWidget {
-  final Map<String, double> dataMap = new Map();
+  final Map<String, double> dataMap = Map();
   final GlobalStats stats;
 
   GlobalGraph(this.stats) {
@@ -16,93 +16,21 @@ class GlobalGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-    Function mathFunc = (Match match) => '${match[1]},';
-
     return Column(
       children: <Widget>[
-        _buildGraph(context),
+        _CustomGraph(dataMap, "Worldwide"),
         SizedBox(height: 32),
-        _statTile(Color(0xffffffff), 'Total Cases',
-            stats.cases.toString().replaceAllMapped(reg, mathFunc)),
-        _statTile(Color(0xfff5c76a), 'Active',
-            stats.active.toString().replaceAllMapped(reg, mathFunc)),
-        _statTile(Color(0xffff653b), 'Deaths',
-            stats.deaths.toString().replaceAllMapped(reg, mathFunc)),
-        _statTile(Color(0xff9ff794), 'Recovered',
-            stats.recovered.toString().replaceAllMapped(reg, mathFunc)),
+        _StatTile(Color(0xffffffff), 'Total Cases', stats.cases),
+        _StatTile(Color(0xfff5c76a), 'Active', stats.active),
+        _StatTile(Color(0xffff653b), 'Deaths', stats.deaths),
+        _StatTile(Color(0xff9ff794), 'Recovered', stats.recovered),
       ],
-    );
-  }
-
-  Widget _buildGraph(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        PieChart(
-          dataMap: dataMap,
-          animationDuration: Duration(milliseconds: 800),
-          chartRadius: MediaQuery.of(context).size.width / 1.6,
-          showChartValuesInPercentage: true,
-          showChartValues: false,
-          showChartValuesOutside: true,
-          colorList: [Color(0xfff5c76a), Color(0xffff653b), Color(0xff9ff794)],
-          showLegends: false,
-          decimalPlaces: 1,
-          showChartValueLabel: true,
-          initialAngle: 4.5,
-          chartType: ChartType.ring,
-          chartValueStyle: TextStyle(
-            color: Colors.white.withOpacity(0.6),
-          ),
-          title: 'Worldwide',
-        ),
-      ],
-    );
-  }
-
-  Widget _statTile(Color color, String label, String value) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(width: 1.0, color: Colors.white24),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Icon(FeatherIcons.circle,
-                  color: color.withOpacity(0.8), size: 10),
-              SizedBox(
-                width: 6,
-              ),
-              Text(
-                label,
-                style: TextStyle(
-                    fontSize: 14, color: Colors.white.withOpacity(0.6)),
-              ),
-            ],
-          ),
-          Text(
-            value,
-            style: TextStyle(
-                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-        ],
-      ),
     );
   }
 }
 
 class CountryGraph extends StatelessWidget {
-  final Map<String, double> dataMap = new Map();
+  final Map<String, double> dataMap = Map();
   final CountryStats stats;
 
   CountryGraph(this.stats) {
@@ -115,26 +43,26 @@ class CountryGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _buildGraph(context),
+        _CustomGraph(dataMap, stats.country),
         SizedBox(height: 32),
-        _statTile(
+        _StatTile(
           Color(0xffffffff),
           'Total Cases',
           stats.cases,
         ),
-        _statTile(
+        _StatTile(
           Color(0xfff5c76a),
           'Active',
           stats.active,
           plus: stats.todayCases,
         ),
-        _statTile(
+        _StatTile(
           Color(0xffff653b),
           'Deaths',
           stats.deaths,
           plus: stats.todayDeaths,
         ),
-        _statTile(
+        _StatTile(
           Color(0xff9ff794),
           'Recovered',
           stats.recovered,
@@ -142,8 +70,16 @@ class CountryGraph extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildGraph(BuildContext context) {
+class _CustomGraph extends StatelessWidget {
+  final Map<String, double> dataMap;
+  final String title;
+
+  _CustomGraph(this.dataMap, this.title);
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -164,14 +100,24 @@ class CountryGraph extends StatelessWidget {
           chartValueStyle: TextStyle(
             color: Colors.white.withOpacity(0.6),
           ),
-          title: stats.country,
+          title: title,
         ),
       ],
     );
   }
+}
 
-  Widget _statTile(Color color, String label, int value, {int plus}) {
-    RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+class _StatTile extends StatelessWidget {
+  final Color color;
+  final String label;
+  final int value;
+  final int plus;
+
+  _StatTile(this.color, this.label, this.value, {this.plus = 0});
+
+  @override
+  Widget build(BuildContext context) {
+    RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
     Function mathFunc = (Match match) => '${match[1]},';
 
     return Container(
@@ -201,7 +147,7 @@ class CountryGraph extends StatelessWidget {
               ),
             ],
           ),
-          (plus != null)
+          (plus != 0)
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.baseline,
