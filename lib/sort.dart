@@ -96,7 +96,7 @@ class _SortbyDialogState extends State<SortbyDialog> {
                 ),
                 RadioListTile<SortBy>(
                   title: const Text(
-                    'Dead',
+                    'Deaths',
                     style: TextStyle(fontSize: 12),
                   ),
                   value: SortBy.deaths,
@@ -111,7 +111,7 @@ class _SortbyDialogState extends State<SortbyDialog> {
                 ),
                 RadioListTile<SortBy>(
                   title: const Text(
-                    'Cases Today',
+                    'New Active',
                     style: TextStyle(fontSize: 12),
                   ),
                   value: SortBy.todayActive,
@@ -126,7 +126,7 @@ class _SortbyDialogState extends State<SortbyDialog> {
                 ),
                 RadioListTile<SortBy>(
                   title: const Text(
-                    'Dead Today',
+                    'New Deaths',
                     style: TextStyle(fontSize: 12),
                   ),
                   value: SortBy.todayDeaths,

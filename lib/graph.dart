@@ -27,7 +27,7 @@ class GlobalGraph extends StatelessWidget {
             stats.cases.toString().replaceAllMapped(reg, mathFunc)),
         _statTile(Color(0xfff5c76a), 'Active',
             stats.active.toString().replaceAllMapped(reg, mathFunc)),
-        _statTile(Color(0xffff653b), 'Dead',
+        _statTile(Color(0xffff653b), 'Deaths',
             stats.deaths.toString().replaceAllMapped(reg, mathFunc)),
         _statTile(Color(0xff9ff794), 'Recovered',
             stats.recovered.toString().replaceAllMapped(reg, mathFunc)),
@@ -130,7 +130,7 @@ class CountryGraph extends StatelessWidget {
         ),
         _statTile(
           Color(0xffff653b),
-          'Dead',
+          'Deaths',
           stats.deaths,
           plus: stats.todayDeaths,
         ),

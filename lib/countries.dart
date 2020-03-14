@@ -220,7 +220,7 @@ class _CountriesPageState extends State<CountriesPage> {
                       ],
                     ),
                     Text(
-                      "Dead",
+                      "Deaths",
                       style: TextStyle(
                           fontSize: 10,
                           color: Color(0xffff653b).withOpacity(0.8)),
