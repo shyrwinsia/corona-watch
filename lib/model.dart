@@ -44,12 +44,13 @@ class CountryStats {
 
   CountryStats({
     this.country,
-    this.cases = 0,
+    cases = 0,
     this.deaths = 0,
     this.todayCases = 0,
     this.todayDeaths = 0,
     this.recovered = 0,
-  }) : this.active = cases - deaths - recovered;
+  })  : this.active = cases - deaths - recovered,
+        this.cases = cases + todayCases;
 
   factory CountryStats.fromJson(Map<String, dynamic> json) {
     return CountryStats(
