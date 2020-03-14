@@ -144,4 +144,5 @@ class _HomePageState extends State<HomePage> {
 // [x] prevent landscape
 // [x] make private function
 // [x] add countries
-// [ ] implement sort: total cases, alphabetical, new cases today, new deaths today
+// [x] implement sort: total cases, alphabetical, new cases today, new deaths today
+// [ ] goddamn clean yo dirty code
