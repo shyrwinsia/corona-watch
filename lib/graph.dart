@@ -113,9 +113,6 @@ class CountryGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-    Function mathFunc = (Match match) => '${match[1]},';
-
     return Column(
       children: <Widget>[
         _buildGraph(context),
@@ -123,22 +120,25 @@ class CountryGraph extends StatelessWidget {
         _statTile(
           Color(0xffffffff),
           'Total Cases',
-          stats.cases.toString().replaceAllMapped(reg, mathFunc),
+          stats.cases,
         ),
         _statTile(
           Color(0xfff5c76a),
           'Active',
-          stats.active.toString().replaceAllMapped(reg, mathFunc),
-          plus: stats.todayCases.toString().replaceAllMapped(reg, mathFunc),
+          stats.active,
+          plus: stats.todayCases,
         ),
         _statTile(
           Color(0xffff653b),
           'Dead',
-          stats.deaths.toString().replaceAllMapped(reg, mathFunc),
-          plus: stats.todayDeaths.toString().replaceAllMapped(reg, mathFunc),
+          stats.deaths,
+          plus: stats.todayDeaths,
         ),
-        _statTile(Color(0xff9ff794), 'Recovered',
-            stats.recovered.toString().replaceAllMapped(reg, mathFunc)),
+        _statTile(
+          Color(0xff9ff794),
+          'Recovered',
+          stats.recovered,
+        )
       ],
     );
   }
@@ -170,7 +170,10 @@ class CountryGraph extends StatelessWidget {
     );
   }
 
-  Widget _statTile(Color color, String label, String value, {String plus}) {
+  Widget _statTile(Color color, String label, int value, {int plus}) {
+    RegExp reg = new RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    Function mathFunc = (Match match) => '${match[1]},';
+
     return Container(
       padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
       decoration: BoxDecoration(
@@ -205,7 +208,7 @@ class CountryGraph extends StatelessWidget {
                   textBaseline: TextBaseline.alphabetic,
                   children: <Widget>[
                       Text(
-                        value,
+                        value.toString().replaceAllMapped(reg, mathFunc),
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -213,7 +216,7 @@ class CountryGraph extends StatelessWidget {
                       ),
                       SizedBox(width: 2),
                       Text(
-                        "+$plus",
+                        "+${plus.toString().replaceAllMapped(reg, mathFunc)}",
                         style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
@@ -221,7 +224,7 @@ class CountryGraph extends StatelessWidget {
                       )
                     ])
               : Text(
-                  value,
+                  value.toString().replaceAllMapped(reg, mathFunc),
                   style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

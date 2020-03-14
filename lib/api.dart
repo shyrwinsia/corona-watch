@@ -4,8 +4,8 @@ import 'package:covidwatch/model.dart';
 import 'package:http/http.dart' as http;
 
 class RestApi {
-  static const HOST = 'corona.lmao.ninja';
-  // static const HOST = '192.168.1.123:3000';
+  // static const HOST = 'corona.lmao.ninja';
+  static const HOST = '192.168.1.123:3000';
   static const URL_ALL = 'http://$HOST/all';
   static const URL_COUNTRIES = 'http://$HOST/countries';
 

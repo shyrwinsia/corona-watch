@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:covidwatch/api.dart';
 import 'package:covidwatch/countrydetail.dart';
 import 'package:covidwatch/model.dart';
+import 'package:covidwatch/sort.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -14,6 +15,9 @@ class CountriesPage extends StatefulWidget {
 class _CountriesPageState extends State<CountriesPage> {
   final StreamController<CountryList> stats = StreamController();
   List<CountryStats> current = List();
+
+  SortBy _sortBy = SortBy.total;
+  OrderBy _orderBy = OrderBy.desc;
 
   @override
   void initState() {
@@ -42,9 +46,20 @@ class _CountriesPageState extends State<CountriesPage> {
             child: Text('Sort'),
             onPressed: () => showDialog(
               context: context,
-              builder: (BuildContext context) => _SortbyDialog(),
+              builder: (BuildContext context) => SortbyDialog(
+                controller: stats,
+                list: current,
+                sortBy: _sortBy,
+                orderBy: _orderBy,
+                stateSetter: (SortBy sortBy, OrderBy orderBy) => setState(
+                  () {
+                    _sortBy = sortBy;
+                    _orderBy = orderBy;
+                  },
+                ),
+              ),
             ),
-          )
+          ),
         ],
       ),
       body: Container(
@@ -53,13 +68,13 @@ class _CountriesPageState extends State<CountriesPage> {
           stream: stats.stream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              this.current = snapshot.data.list;
+              current = snapshot.data.list;
               return ListView.separated(
                   itemCount: snapshot.data.list.length,
                   separatorBuilder: (BuildContext context, int index) =>
                       Divider(color: Colors.white24),
                   itemBuilder: (BuildContext context, int index) =>
-                      _buildTile(snapshot.data.list[index]));
+                      _buildTile(current[index]));
             } else if (snapshot.hasError) {
               return Center(
                 child: Padding(
@@ -85,9 +100,7 @@ class _CountriesPageState extends State<CountriesPage> {
                       'Fetching latest updates',
                       style: TextStyle(fontSize: 14, color: Colors.white),
                     ),
-                    SizedBox(
-                      height: 4,
-                    ),
+                    SizedBox(height: 4),
                     Text(
                       'Source: worldometers.info',
                       style: TextStyle(
@@ -199,7 +212,7 @@ class _CountriesPageState extends State<CountriesPage> {
                       ],
                     ),
                     Text(
-                      "Deaths",
+                      "Dead",
                       style: TextStyle(
                           fontSize: 10,
                           color: Color(0xffff653b).withOpacity(0.8)),
@@ -244,212 +257,5 @@ class _CountriesPageState extends State<CountriesPage> {
   void dispose() {
     stats.close();
     super.dispose();
-  }
-}
-
-enum _Sortby { alphabetical, total, todayActive, todayDeaths, active, deaths }
-enum _SortDirection { asc, desc }
-
-class _SortbyDialog extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _SortbyDialogState();
-}
-
-class _SortbyDialogState extends State<_SortbyDialog> {
-  _Sortby _sortBy = _Sortby.total;
-  _SortDirection _sortDirection = _SortDirection.desc;
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Sort by',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                SizedBox(height: 8),
-                RadioListTile<_Sortby>(
-                  title: Text(
-                    'Total Cases',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: _Sortby.total,
-                  groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<_Sortby>(
-                  title: const Text(
-                    'Active',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: _Sortby.active,
-                  groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<_Sortby>(
-                  title: const Text(
-                    'Deaths',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: _Sortby.deaths,
-                  groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<_Sortby>(
-                  title: const Text(
-                    'Cases Today',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: _Sortby.todayActive,
-                  groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<_Sortby>(
-                  title: const Text(
-                    'Deaths Today',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: _Sortby.todayDeaths,
-                  groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<_Sortby>(
-                  title: const Text(
-                    'Alphabetical',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: _Sortby.alphabetical,
-                  groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Direction',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                SizedBox(height: 8),
-                RadioListTile<_SortDirection>(
-                  title: Text(
-                    'Ascending',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: _SortDirection.asc,
-                  groupValue: _sortDirection,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortDirection = value;
-                      print(_sortDirection);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<_SortDirection>(
-                  title: Text(
-                    'Decending',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  value: _SortDirection.desc,
-                  groupValue: _sortDirection,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortDirection = value;
-                      print(_sortDirection);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                SizedBox(
-                  width: 12,
-                ),
-                FlatButton(
-                  color: Color(0xff8fa7f4),
-                  child: Text(
-                    'Sort',
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  onPressed: () {
-                    // do sort with params
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
   }
 }
