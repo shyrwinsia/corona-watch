@@ -215,8 +215,12 @@ class CountryGraph extends StatelessWidget {
                             color: Colors.white),
                       ),
                       SizedBox(width: 2),
+                      Icon(
+                        FeatherIcons.arrowUp,
+                        size: 10,
+                      ),
                       Text(
-                        "+${plus.toString().replaceAllMapped(reg, mathFunc)}",
+                        "${plus.toString().replaceAllMapped(reg, mathFunc)}",
                         style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,

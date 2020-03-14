@@ -72,7 +72,7 @@ class _CountriesPageState extends State<CountriesPage> {
               return ListView.separated(
                   itemCount: snapshot.data.list.length,
                   separatorBuilder: (BuildContext context, int index) =>
-                      Divider(color: Colors.white24),
+                      Divider(color: Colors.white38),
                   itemBuilder: (BuildContext context, int index) =>
                       _buildTile(current[index]));
             } else if (snapshot.hasError) {
@@ -175,8 +175,12 @@ class _CountriesPageState extends State<CountriesPage> {
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                         SizedBox(width: 2),
+                        Icon(
+                          FeatherIcons.arrowUp,
+                          size: 10,
+                        ),
                         Text(
-                          "+${stats.todayCases.toString().replaceAllMapped(reg, mathFunc)}",
+                          "${stats.todayCases.toString().replaceAllMapped(reg, mathFunc)}",
                           style: TextStyle(fontSize: 10, color: Colors.white),
                         ),
                       ],
@@ -205,8 +209,12 @@ class _CountriesPageState extends State<CountriesPage> {
                           style: TextStyle(fontSize: 16, color: Colors.white),
                         ),
                         SizedBox(width: 2),
+                        Icon(
+                          FeatherIcons.arrowUp,
+                          size: 10,
+                        ),
                         Text(
-                          "+${stats.todayDeaths.toString().replaceAllMapped(reg, mathFunc)}",
+                          "${stats.todayDeaths.toString().replaceAllMapped(reg, mathFunc)}",
                           style: TextStyle(fontSize: 10, color: Colors.white),
                         ),
                       ],
