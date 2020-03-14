@@ -115,7 +115,7 @@ class _CountriesPageState extends State<CountriesPage> {
         ),
       ),
       child: Container(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 8),
+          padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,7 +125,7 @@ class _CountriesPageState extends State<CountriesPage> {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               SizedBox(
-                height: 16,
+                height: 14,
               ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -165,7 +165,7 @@ class _CountriesPageState extends State<CountriesPage> {
                               style:
                                   TextStyle(fontSize: 16, color: Colors.white),
                             ),
-                            SizedBox(width: 1),
+                            SizedBox(width: 2),
                             Text(
                               "+${stats.todayCases.toString().replaceAllMapped(reg, mathFunc)}",
                               style:
@@ -197,7 +197,7 @@ class _CountriesPageState extends State<CountriesPage> {
                               style:
                                   TextStyle(fontSize: 16, color: Colors.white),
                             ),
-                            SizedBox(width: 1),
+                            SizedBox(width: 2),
                             Text(
                               "+${stats.todayDeaths.toString().replaceAllMapped(reg, mathFunc)}",
                               style:

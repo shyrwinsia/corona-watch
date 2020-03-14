@@ -199,22 +199,27 @@ class CountryGraph extends StatelessWidget {
             ],
           ),
           (plus != null)
-              ? Row(children: <Widget>[
-                  Text(
-                    value,
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                  Text(
-                    " (+$plus)",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: color),
-                  )
-                ])
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: <Widget>[
+                      Text(
+                        value,
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                      SizedBox(width: 2),
+                      Text(
+                        "+$plus",
+                        style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      )
+                    ])
               : Text(
                   value,
                   style: TextStyle(

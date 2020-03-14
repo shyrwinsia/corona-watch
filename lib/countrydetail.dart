@@ -18,7 +18,7 @@ class CountryDetailPage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          countryStats.country.toUpperCase() + " STATISTICS",
+          "COVID IN " + countryStats.country.toUpperCase(),
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         centerTitle: true,
