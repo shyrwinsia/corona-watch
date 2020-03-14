@@ -59,64 +59,21 @@ class _SortbyDialogState extends State<SortbyDialog> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Sort by',
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                Text(
+                  'Sort by',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
                 SizedBox(height: 8),
-                RadioListTile<SortBy>(
-                  title: Text('Total Cases', style: TextStyle(fontSize: 12)),
-                  value: SortBy.total,
-                  groupValue: _sortBy,
-                  onChanged: _setSortChoice,
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<SortBy>(
-                  title: Text('Active', style: TextStyle(fontSize: 12)),
-                  value: SortBy.active,
-                  groupValue: _sortBy,
-                  onChanged: _setSortChoice,
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<SortBy>(
-                  title: Text('Deaths', style: TextStyle(fontSize: 12)),
-                  value: SortBy.deaths,
-                  groupValue: _sortBy,
-                  onChanged: _setSortChoice,
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<SortBy>(
-                  title: Text('New Active', style: TextStyle(fontSize: 12)),
-                  value: SortBy.todayActive,
-                  groupValue: _sortBy,
-                  onChanged: _setSortChoice,
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<SortBy>(
-                  title: Text('New Deaths', style: TextStyle(fontSize: 12)),
-                  value: SortBy.todayDeaths,
-                  groupValue: _sortBy,
-                  onChanged: (value) {
-                    setState(() {
-                      _sortBy = value;
-                      print(_sortBy);
-                    });
-                  },
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<SortBy>(
-                  title: Text('Recovered', style: TextStyle(fontSize: 12)),
-                  value: SortBy.recovered,
-                  groupValue: _sortBy,
-                  onChanged: _setSortChoice,
-                  activeColor: Color(0xff8fa7f4),
-                ),
-                RadioListTile<SortBy>(
-                  title: Text('Alphabetical', style: TextStyle(fontSize: 12)),
-                  value: SortBy.alphabetical,
-                  groupValue: _sortBy,
-                  onChanged: _setSortChoice,
-                  activeColor: Color(0xff8fa7f4),
-                ),
+                _buildSortByChoice('Total Cases', SortBy.total),
+                _buildSortByChoice('Active', SortBy.active),
+                _buildSortByChoice('Deaths', SortBy.deaths),
+                _buildSortByChoice('New Active', SortBy.todayActive),
+                _buildSortByChoice('New Deaths', SortBy.todayDeaths),
+                _buildSortByChoice('Recovered', SortBy.recovered),
+                _buildSortByChoice('Alphabetical', SortBy.alphabetical),
               ],
             ),
             SizedBox(height: 24),
@@ -213,13 +170,20 @@ class _SortbyDialogState extends State<SortbyDialog> {
 
   Widget _buildOrderByChoice(String title, OrderBy value) {
     return RadioListTile<OrderBy>(
-      title: Text(
-        title,
-        style: TextStyle(fontSize: 12),
-      ),
+      title: Text(title, style: TextStyle(fontSize: 12)),
       value: value,
       groupValue: _orderBy,
       onChanged: _setOrderChoice,
+      activeColor: Color(0xff8fa7f4),
+    );
+  }
+
+  Widget _buildSortByChoice(String title, SortBy value) {
+    return RadioListTile<SortBy>(
+      title: Text(title, style: TextStyle(fontSize: 12)),
+      value: value,
+      groupValue: _sortBy,
+      onChanged: _setSortChoice,
       activeColor: Color(0xff8fa7f4),
     );
   }
