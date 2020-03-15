@@ -48,73 +48,68 @@ class _SortbyDialogState extends State<SortbyDialog> {
     return Dialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8))),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Sort by',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
+      child: ListView(
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        children: <Widget>[
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Sort by',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
                 ),
-                SizedBox(height: 8),
-                _buildSortByChoice('Total Cases', SortBy.total),
-                _buildSortByChoice('Active', SortBy.active),
-                _buildSortByChoice('Deaths', SortBy.deaths),
-                _buildSortByChoice('New Active', SortBy.todayActive),
-                _buildSortByChoice('New Deaths', SortBy.todayDeaths),
-                _buildSortByChoice('Recovered', SortBy.recovered),
-                _buildSortByChoice('Alphabetical', SortBy.alphabetical),
-              ],
-            ),
-            SizedBox(height: 24),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Order by',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
-                SizedBox(height: 8),
-                _buildOrderByChoice('Highest first', OrderBy.desc),
-                _buildOrderByChoice('Lowest  first', OrderBy.asc),
-              ],
-            ),
-            SizedBox(
-              height: 24,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  child: Text('Cancel', style: TextStyle(fontSize: 12)),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-                SizedBox(width: 12),
-                FlatButton(
-                  color: Color(0xff8fa7f4),
-                  child: Text('Sort', style: TextStyle(fontSize: 12)),
-                  onPressed: () {
-                    // do sort with params
-                    this.widget.stateSetter(_sortBy, _orderBy);
-                    _sort();
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            )
-          ],
-        ),
+              ),
+              SizedBox(height: 8),
+              _buildSortByChoice('Total Cases', SortBy.total),
+              _buildSortByChoice('Active', SortBy.active),
+              _buildSortByChoice('Deaths', SortBy.deaths),
+              _buildSortByChoice('New Active', SortBy.todayActive),
+              _buildSortByChoice('New Deaths', SortBy.todayDeaths),
+              _buildSortByChoice('Recovered', SortBy.recovered),
+              _buildSortByChoice('Alphabetical', SortBy.alphabetical),
+            ],
+          ),
+          SizedBox(height: 24),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Order by',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+              ),
+              SizedBox(height: 8),
+              _buildOrderByChoice('Highest First', OrderBy.desc),
+              _buildOrderByChoice('Lowest First', OrderBy.asc),
+            ],
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              FlatButton(
+                child: Text('Cancel', style: TextStyle(fontSize: 12)),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              SizedBox(width: 12),
+              FlatButton(
+                color: Color(0xff8fa7f4),
+                child: Text('Sort', style: TextStyle(fontSize: 12)),
+                onPressed: () {
+                  // do sort with params
+                  this.widget.stateSetter(_sortBy, _orderBy);
+                  _sort();
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          )
+        ],
       ),
     );
   }
