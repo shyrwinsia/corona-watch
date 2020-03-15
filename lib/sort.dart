@@ -93,13 +93,19 @@ class _SortbyDialogState extends State<SortbyDialog> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               FlatButton(
-                child: Text('Cancel', style: TextStyle(fontSize: 12)),
+                child: Text('Cancel',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xff8fa7f4),
+                    )),
                 onPressed: () => Navigator.of(context).pop(),
               ),
-              SizedBox(width: 12),
               FlatButton(
-                color: Color(0xff8fa7f4),
-                child: Text('Sort', style: TextStyle(fontSize: 12)),
+                child: Text('Sort',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xff8fa7f4),
+                    )),
                 onPressed: () {
                   // do sort with params
                   this.widget.stateSetter(_sortBy, _orderBy);
