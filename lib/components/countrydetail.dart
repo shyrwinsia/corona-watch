@@ -1,5 +1,5 @@
-import 'package:covidwatch/graph.dart';
-import 'package:covidwatch/model.dart';
+import 'package:covidwatch/components/graph.dart';
+import 'package:covidwatch/data/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:covidwatch/model.dart';
+import 'package:covidwatch/data/model.dart';
 import 'package:flutter/material.dart';
 
 enum SortBy {

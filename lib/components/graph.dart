@@ -1,8 +1,7 @@
-import 'package:covidwatch/model.dart';
+import 'package:covidwatch/data/model.dart';
+import 'package:covidwatch/extras/chart/pie_chart.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-
-import 'chart/pie_chart.dart';
 
 class GlobalGraph extends StatelessWidget {
   final Map<String, double> dataMap = Map();

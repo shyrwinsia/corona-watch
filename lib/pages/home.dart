@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:covidwatch/api.dart';
-import 'package:covidwatch/countries.dart';
-import 'package:covidwatch/graph.dart';
-import 'package:covidwatch/model.dart';
+import 'package:covidwatch/components/graph.dart';
+import 'package:covidwatch/data/api.dart';
+import 'package:covidwatch/data/model.dart';
+import 'package:covidwatch/pages/countries.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 

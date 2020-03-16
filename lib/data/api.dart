@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:covidwatch/model.dart';
+import 'package:covidwatch/data/model.dart';
 import 'package:http/http.dart' as http;
 
 class RestApi {
