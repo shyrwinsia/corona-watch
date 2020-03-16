@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             actions: <Widget>[
-              if (state is Loaded)
+              if (state is Loaded || state is Wtf)
                 IconButton(
                     icon: Icon(FeatherIcons.refreshCw),
                     iconSize: 16,
@@ -59,6 +59,8 @@ class _HomePageState extends State<HomePage> {
       return _buildLoading();
     } else if (state is Loaded) {
       return _buildGlobalStats(state.stats);
+    } else if (state is Wtf) {
+      return widget.buildError(state.error);
     } else {
       return widget.buildError('Something went wrong');
     }

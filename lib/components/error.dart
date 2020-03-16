@@ -5,11 +5,11 @@ mixin ErrorMixin on Widget {
   Widget buildError(String message) {
     return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
+        padding: EdgeInsets.all(32),
         child: Text(
           message,
           textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.white, fontSize: 24),
+          style: TextStyle(color: Colors.white, fontSize: 16),
         ),
       ),
     );
