@@ -1,6 +1,10 @@
 ![icon](img/banner.png)
 
-![Build Status](https://github.com/shyrwinsia/covid-watch/workflows/build/badge.svg) [![Nyancat](https://img.shields.io/badge/nyancat-approved-ff69b4.svg)](https://www.youtube.com/watch?v=QH2-TGUlwu4) ![License](https://img.shields.io/github/license/shyrwinsia/covid-watch) ![Last Commit](https://img.shields.io/github/last-commit/shyrwinsia/covid-watch) ![Releases](https://img.shields.io/github/v/release/shyrwinsia/covid-watch?include_prereleases)
+[![Build Status](https://github.com/shyrwinsia/covid-watch/workflows/build/badge.svg)](https://github.com/shyrwinsia/covid-watch/actions)
+[![Nyancat](https://img.shields.io/badge/nyancat-approved-ff69b4.svg)](https://www.youtube.com/watch?v=QH2-TGUlwu4) 
+[![License](https://img.shields.io/github/license/shyrwinsia/covid-watch)](https://github.com/shyrwinsia/covid-watch/blob/master/LICENSE)
+[![Last Commit](https://img.shields.io/github/last-commit/shyrwinsia/covid-watch)](https://github.com/shyrwinsia/covid-watch/commits/master)
+[![Releases](https://img.shields.io/github/v/release/shyrwinsia/covid-watch?include_prereleases)](https://github.com/shyrwinsia/covid-watch/releases)
 
 ![demo gif](img/demo.gif)
 
