@@ -30,3 +30,14 @@ class Loaded extends HomePageState {
 
   List<Object> get props => [this.stats];
 }
+
+class Wtf extends HomePageState {
+  final String error;
+
+  Wtf({this.error});
+
+  @override
+  String toString() => '[State] HomePageState: Wtf {$error}';
+
+  List<Object> get props => [this.error];
+}
