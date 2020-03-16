@@ -1,99 +1,94 @@
-import 'dart:async';
-
+import 'package:covidwatch/bloc/homepage/bloc.dart';
+import 'package:covidwatch/components/error.dart';
 import 'package:covidwatch/components/graph.dart';
-import 'package:covidwatch/data/api.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:covidwatch/pages/countries.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatefulWidget with ErrorMixin {
   @override
   State<StatefulWidget> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final StreamController<GlobalStats> stats = StreamController();
-  bool _isLoading;
+  HomePageBloc _bloc;
 
   @override
   void initState() {
     super.initState();
-    _fetch();
+    _bloc = HomePageBloc()..add(LoadGlobalStats());
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text(
-          "COVID WATCH",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        actions: <Widget>[
-          _isLoading
-              ? Container()
-              : IconButton(
-                  icon: Icon(FeatherIcons.refreshCw),
-                  iconSize: 16,
-                  onPressed: () => _fetch()),
+    return BlocBuilder<HomePageBloc, HomePageState>(
+      bloc: _bloc,
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            title: Text(
+              "COVID WATCH",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            actions: <Widget>[
+              if (state is Loaded)
+                IconButton(
+                    icon: Icon(FeatherIcons.refreshCw),
+                    iconSize: 16,
+                    onPressed: () =>
+                        _bloc.add(LoadGlobalStats())), // the fetch event here
+            ],
+          ),
+          body: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: _buildBody(context, state),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(BuildContext context, HomePageState state) {
+    if (state is Loading) {
+      return _buildLoading();
+    } else if (state is Loaded) {
+      return _buildGlobalStats(state.stats);
+    } else {
+      return widget.buildError('Something went wrong');
+    }
+  }
+
+  Widget _buildLoading() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+          SizedBox(height: 24),
+          Text(
+            'Fetching latest updates',
+            style: TextStyle(fontSize: 14, color: Colors.white),
+          ),
+          SizedBox(height: 4),
+          Text(
+            'Source: worldometers.info',
+            style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(.6)),
+          ),
         ],
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: StreamBuilder<GlobalStats>(
-          stream: stats.stream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return buildGlobalStats(snapshot.data);
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24),
-                  child: Text(
-                    "${snapshot.error}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 24),
-                  ),
-                ),
-              );
-            } else {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                    SizedBox(height: 24),
-                    Text(
-                      'Fetching latest updates',
-                      style: TextStyle(fontSize: 14, color: Colors.white),
-                    ),
-                    SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      'Source: worldometers.info',
-                      style: TextStyle(
-                          fontSize: 12, color: Colors.white.withOpacity(.6)),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
       ),
     );
   }
 
-  Widget buildGlobalStats(GlobalStats stats) {
+  Widget _buildGlobalStats(GlobalStats stats) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -108,29 +103,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _fetch() async {
-    stats.add(null);
-    setState(() {
-      _isLoading = true;
-    });
-    await RestApi.fetchGlobal()
-        .catchError(
-          (onError) {
-            print('Some error occured');
-            stats.addError(onError);
-          },
-        )
-        .then((globalStats) => stats.add(globalStats))
-        .then(
-          (onValue) => setState(() {
-            _isLoading = false;
-          }),
-        );
-  }
-
   @override
   void dispose() {
-    stats.close();
+    _bloc.close();
     super.dispose();
   }
 }
@@ -145,4 +120,5 @@ class _HomePageState extends State<HomePage> {
 // [x] make private function
 // [x] add countries
 // [x] implement sort: total cases, alphabetical, new cases today, new deaths today
-// [ ] goddamn clean yo dirty code
+// [x] goddamn clean yo dirty code
+// [ ] add bloc to code
