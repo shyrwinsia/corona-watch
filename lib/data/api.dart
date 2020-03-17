@@ -1,75 +1,81 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:covidwatch/data/model.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RestApi {
   static const HOST = 'corona.lmao.ninja';
-  // static const HOST = '192.168.1.123:3000';
-  static const URL_ALL = 'http://$HOST/all';
+  static const URL_GLOBAL = 'http://$HOST/all';
   static const URL_COUNTRIES = 'http://$HOST/countries';
   static const TIMEOUT = 10;
   static const SLEEP = 1000;
-  static const TIMEUNTILNEXTFETCH = 3600000;
+  static const TIME_UNTIL_NEXT_FETCH = 30000;
+  static const FAKE_FETCH_TIME = 1985;
 
   static Future<CovidStats> fetch() async {
     if (await _shouldFetch()) {
-      final globalStats = await _fetchGlobal();
-      _sleep();
-      final countryList = await _fetchCountries();
+      try {
+        final responseGlobal =
+            await http.get(URL_GLOBAL).timeout(Duration(seconds: TIMEOUT));
+        _checkResponseCode(responseGlobal);
 
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setInt('lastFetchTimestamp', DateTime.now().millisecondsSinceEpoch);
-      return CovidStats(globalStats: globalStats, countryList: countryList);
-    } else {
-      // TODO return cache here
-      final globalStats = await _fetchGlobal();
-      _sleep();
-      final countryList = await _fetchCountries();
+        await _sleep(SLEEP);
 
-      final prefs = await SharedPreferences.getInstance();
-      prefs.setInt('lastFetchTimestamp', DateTime.now().millisecondsSinceEpoch);
-      return CovidStats(globalStats: globalStats, countryList: countryList);
-    }
-  }
+        final responseCountries =
+            await http.get(URL_COUNTRIES).timeout(Duration(seconds: TIMEOUT));
+        _checkResponseCode(responseCountries);
 
-  static Future<GlobalStats> _fetchGlobal() async {
-    try {
-      final response =
-          await http.get(URL_ALL).timeout(Duration(seconds: TIMEOUT));
-      if (response.statusCode == 200) {
-        return GlobalStats.fromJson(json.decode(response.body));
-      } else {
-        if (response.statusCode == 429)
-          throw RestApiException(
-              'Request limit reached. 😵\nRetry after ${response.headers['retry-after']} seconds.');
-        else
-          throw RestApiException(
-              'Request failed. 😲\nHTTP ${response.statusCode}: ${response.reasonPhrase}');
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setInt(
+            'lastFetchTimestamp', DateTime.now().millisecondsSinceEpoch);
+
+        // save the jsons to file
+        await _writeToFile('global', responseGlobal.body);
+        await _writeToFile('countries', responseCountries.body);
+
+        return CovidStats(
+          globalStats: GlobalStats.fromJson(
+            json.decode(responseGlobal.body),
+          ),
+          countryList: CountryList.fromJson(
+            json.decode(responseCountries.body),
+          ),
+        );
+      } on TimeoutException catch (e) {
+        print(e.toString());
+        throw RestApiException(
+            "I couldn't reach the server. 😔\nTry again after a while.");
       }
-    } on TimeoutException catch (e) {
-      print(e.toString());
-      throw RestApiException(
-          "I couldn't reach the server. 😔\nTry again after a while.");
-    }
-  }
-
-  static Future<CountryList> _fetchCountries() async {
-    final response =
-        await http.get(URL_COUNTRIES).timeout(Duration(seconds: TIMEOUT));
-    if (response.statusCode == 200) {
-      return CountryList.fromJson(json.decode(response.body));
     } else {
-      if (response.statusCode == 429)
-        print('Retry after ${response.headers['retry-after']}s');
-      throw Exception('Request failed with status: ${response.statusCode}.');
+      // just some arbitrary number to make
+      // it feel like its fetching for user experience
+      await _sleep(FAKE_FETCH_TIME);
+
+      return CovidStats(
+        globalStats: GlobalStats.fromJson(
+          json.decode(await _readFromFile('global')),
+        ),
+        countryList: CountryList.fromJson(
+          json.decode(await _readFromFile('countries')),
+        ),
+      );
     }
   }
 
-  static Future _sleep() {
-    return Future.delayed(Duration(milliseconds: SLEEP));
+  static Future<void> _writeToFile(String filename, dynamic data) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/$filename.json');
+    file.writeAsString(data);
+  }
+
+  static Future<String> _readFromFile(String filename) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final file = File('${directory.path}/$filename.json');
+    return file.readAsString();
   }
 
   static Future<bool> _shouldFetch() async {
@@ -78,11 +84,26 @@ class RestApi {
     if (lastFetchTimestamp < 0) {
       return true;
     } else if (DateTime.now().isAfter(DateTime.fromMillisecondsSinceEpoch(
-        lastFetchTimestamp + TIMEUNTILNEXTFETCH))) {
+        lastFetchTimestamp + TIME_UNTIL_NEXT_FETCH))) {
       return true;
     } else {
       return false;
     }
+  }
+
+  static void _checkResponseCode(response) {
+    if (response.statusCode == 200)
+      return;
+    else if (response.statusCode == 429)
+      throw RestApiException(
+          'Request limit reached. 😵\nRetry after ${response.headers['retry-after']} seconds.');
+    else
+      throw RestApiException(
+          'Request failed. 😲\nHTTP ${response.statusCode}: ${response.reasonPhrase}');
+  }
+
+  static Future _sleep(int millis) {
+    return Future.delayed(Duration(milliseconds: millis));
   }
 }
 

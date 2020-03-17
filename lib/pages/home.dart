@@ -114,7 +114,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// TODO
 // [x] change circular progress color
 // [x] change refresh to button
 // [x] make the manual refresh work
