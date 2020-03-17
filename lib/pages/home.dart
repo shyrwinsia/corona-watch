@@ -90,17 +90,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildGlobalStats(GlobalStats stats) {
+  Widget _buildGlobalStats(CovidStats stats) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        GlobalGraph(stats),
+        GlobalGraph(stats.globalStats),
         FlatButton(
             child: Text('View countries',
                 style: TextStyle(color: Color(0xff8fa7f4))),
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CountriesPage()))),
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CountriesPage(stats.countryList)))),
       ],
     );
   }
@@ -112,15 +114,14 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// TODO
 // [x] change circular progress color
 // [x] change refresh to button
 // [x] make the manual refresh work
 // [x] black splash screen
-// [ ] error for no connection
+// [x] error for no connection
 // [x] prevent landscape
 // [x] make private function
 // [x] add countries
 // [x] implement sort: total cases, alphabetical, new cases today, new deaths today
 // [x] goddamn clean yo dirty code
-// [ ] add bloc to code
+// [-] add bloc to code

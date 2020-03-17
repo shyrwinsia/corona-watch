@@ -21,7 +21,7 @@ class Loading extends HomePageState {
 }
 
 class Loaded extends HomePageState {
-  final GlobalStats stats;
+  final CovidStats stats;
 
   Loaded({this.stats});
 

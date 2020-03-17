@@ -1,20 +1,19 @@
-import 'dart:async';
-
 import 'package:covidwatch/components/countrydetail.dart';
 import 'package:covidwatch/components/sort.dart';
-import 'package:covidwatch/data/api.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
 class CountriesPage extends StatefulWidget {
+  final CountryList stats;
+
+  CountriesPage(this.stats);
   @override
   State<StatefulWidget> createState() => _CountriesPageState();
 }
 
 class _CountriesPageState extends State<CountriesPage> {
-  final StreamController<CountryList> stats = StreamController();
-  List<CountryStats> current = List();
+  List<CountryStats> _current;
 
   SortBy _sortBy = SortBy.total;
   OrderBy _orderBy = OrderBy.desc;
@@ -22,7 +21,7 @@ class _CountriesPageState extends State<CountriesPage> {
   @override
   void initState() {
     super.initState();
-    _fetch();
+    this._current = widget.stats.list;
   }
 
   @override
@@ -47,14 +46,16 @@ class _CountriesPageState extends State<CountriesPage> {
             onPressed: () => showDialog(
               context: context,
               builder: (BuildContext context) => SortbyDialog(
-                controller: stats,
-                list: current,
+                list: _current,
                 sortBy: _sortBy,
                 orderBy: _orderBy,
-                stateSetter: (SortBy sortBy, OrderBy orderBy) => setState(
+                stateSetter: (SortBy sortBy, OrderBy orderBy,
+                        List<CountryStats> stats) =>
+                    setState(
                   () {
                     _sortBy = sortBy;
                     _orderBy = orderBy;
+                    _current = stats;
                   },
                 ),
               ),
@@ -64,54 +65,12 @@ class _CountriesPageState extends State<CountriesPage> {
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: StreamBuilder<CountryList>(
-          stream: stats.stream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              current = snapshot.data.list;
-              return ListView.separated(
-                  itemCount: snapshot.data.list.length,
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(color: Colors.white38),
-                  itemBuilder: (BuildContext context, int index) =>
-                      _buildTile(current[index]));
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Padding(
-                  padding: EdgeInsets.all(24),
-                  child: Text(
-                    "${snapshot.error}",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 24),
-                  ),
-                ),
-              );
-            } else {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                    SizedBox(height: 24),
-                    Text(
-                      'Fetching latest updates',
-                      style: TextStyle(fontSize: 14, color: Colors.white),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      'Source: worldometers.info',
-                      style: TextStyle(
-                          fontSize: 12, color: Colors.white.withOpacity(.6)),
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
-        ),
+        child: ListView.separated(
+            itemCount: _current.length,
+            separatorBuilder: (BuildContext context, int index) =>
+                Divider(color: Colors.white38),
+            itemBuilder: (BuildContext context, int index) =>
+                _buildTile(_current[index])),
       ),
     );
   }
@@ -269,19 +228,5 @@ class _CountriesPageState extends State<CountriesPage> {
         ),
       ),
     );
-  }
-
-  void _fetch() async {
-    stats.add(null);
-    await RestApi.fetchCountries().catchError((onError) {
-      print('Some error occured');
-      stats.addError(onError);
-    }).then((countryStats) => stats.add(countryStats));
-  }
-
-  @override
-  void dispose() {
-    stats.close();
-    super.dispose();
   }
 }
