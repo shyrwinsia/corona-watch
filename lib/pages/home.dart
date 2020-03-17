@@ -119,10 +119,10 @@ class _HomePageState extends State<HomePage> {
 // [x] change refresh to button
 // [x] make the manual refresh work
 // [x] black splash screen
-// [ ] error for no connection
+// [x] error for no connection
 // [x] prevent landscape
 // [x] make private function
 // [x] add countries
 // [x] implement sort: total cases, alphabetical, new cases today, new deaths today
 // [x] goddamn clean yo dirty code
-// [ ] add bloc to code
+// [-] add bloc to code

@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:covidwatch/data/model.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RestApi {
   static const HOST = 'corona.lmao.ninja';
@@ -11,12 +12,27 @@ class RestApi {
   static const URL_COUNTRIES = 'http://$HOST/countries';
   static const TIMEOUT = 10;
   static const SLEEP = 1000;
+  static const TIMEUNTILNEXTFETCH = 3600000;
 
   static Future<CovidStats> fetch() async {
-    final globalStats = await _fetchGlobal();
-    _sleep();
-    final countryList = await _fetchCountries();
-    return CovidStats(globalStats: globalStats, countryList: countryList);
+    if (await _shouldFetch()) {
+      final globalStats = await _fetchGlobal();
+      _sleep();
+      final countryList = await _fetchCountries();
+
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setInt('lastFetchTimestamp', DateTime.now().millisecondsSinceEpoch);
+      return CovidStats(globalStats: globalStats, countryList: countryList);
+    } else {
+      // TODO return cache here
+      final globalStats = await _fetchGlobal();
+      _sleep();
+      final countryList = await _fetchCountries();
+
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setInt('lastFetchTimestamp', DateTime.now().millisecondsSinceEpoch);
+      return CovidStats(globalStats: globalStats, countryList: countryList);
+    }
   }
 
   static Future<GlobalStats> _fetchGlobal() async {
@@ -54,6 +70,19 @@ class RestApi {
 
   static Future _sleep() {
     return Future.delayed(Duration(milliseconds: SLEEP));
+  }
+
+  static Future<bool> _shouldFetch() async {
+    final prefs = await SharedPreferences.getInstance();
+    int lastFetchTimestamp = prefs.getInt('lastFetchTimestamp') ?? -1;
+    if (lastFetchTimestamp < 0) {
+      return true;
+    } else if (DateTime.now().isAfter(DateTime.fromMillisecondsSinceEpoch(
+        lastFetchTimestamp + TIMEUNTILNEXTFETCH))) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
 

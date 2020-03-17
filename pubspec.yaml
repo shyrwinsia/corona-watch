@@ -15,6 +15,7 @@ dependencies:
   async: ^2.4.0
   # storage
   sembast: ^1.15.1
+  shared_preferences: ^0.5.6
   path_provider: ^0.5.0+1
   # bloc
   bloc: ^3.0.0
