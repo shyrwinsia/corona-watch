@@ -107,9 +107,9 @@ class _SortbyDialogState extends State<SortbyDialog> {
                       color: Color(0xff8fa7f4),
                     )),
                 onPressed: () {
-                  // do sort with params
-                  this.widget.stateSetter(_sortBy, _orderBy);
                   _sort();
+                  // do sort with params
+                  this.widget.stateSetter(_sortBy, _orderBy, widget.list);
                   Navigator.of(context).pop();
                 },
               )
@@ -157,8 +157,6 @@ class _SortbyDialogState extends State<SortbyDialog> {
       else
         widget.list.sort((a, b) => a.country.compareTo(b.country));
     }
-
-    widget.controller.add(CountryList(list: widget.list));
   }
 
   void _setOrderChoice(value) {

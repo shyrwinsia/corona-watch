@@ -90,17 +90,19 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildGlobalStats(GlobalStats stats) {
+  Widget _buildGlobalStats(CovidStats stats) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        GlobalGraph(stats),
+        GlobalGraph(stats.globalStats),
         FlatButton(
             child: Text('View countries',
                 style: TextStyle(color: Color(0xff8fa7f4))),
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CountriesPage()))),
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CountriesPage(stats.countryList)))),
       ],
     );
   }

@@ -9,9 +9,17 @@ class RestApi {
   // static const HOST = '192.168.1.123:3000';
   static const URL_ALL = 'http://$HOST/all';
   static const URL_COUNTRIES = 'http://$HOST/countries';
-  static const TIMEOUT = 7;
+  static const TIMEOUT = 10;
+  static const SLEEP = 1000;
 
-  static Future<GlobalStats> fetchGlobal() async {
+  static Future<CovidStats> fetch() async {
+    final globalStats = await _fetchGlobal();
+    _sleep();
+    final countryList = await _fetchCountries();
+    return CovidStats(globalStats: globalStats, countryList: countryList);
+  }
+
+  static Future<GlobalStats> _fetchGlobal() async {
     try {
       final response =
           await http.get(URL_ALL).timeout(Duration(seconds: TIMEOUT));
@@ -32,8 +40,7 @@ class RestApi {
     }
   }
 
-  // TODO Combine fetches to a completer or group future. Beware, this will trigger rate-limiting
-  static Future<CountryList> fetchCountries() async {
+  static Future<CountryList> _fetchCountries() async {
     final response =
         await http.get(URL_COUNTRIES).timeout(Duration(seconds: TIMEOUT));
     if (response.statusCode == 200) {
@@ -43,6 +50,10 @@ class RestApi {
         print('Retry after ${response.headers['retry-after']}s');
       throw Exception('Request failed with status: ${response.statusCode}.');
     }
+  }
+
+  static Future _sleep() {
+    return Future.delayed(Duration(milliseconds: SLEEP));
   }
 }
 

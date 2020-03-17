@@ -1,3 +1,10 @@
+class CovidStats {
+  final GlobalStats globalStats;
+  final CountryList countryList;
+
+  CovidStats({this.globalStats, this.countryList});
+}
+
 class GlobalStats {
   final int cases;
   final int active;
