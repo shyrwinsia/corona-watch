@@ -51,6 +51,7 @@ class PieChartPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    int marginSide = 1; // 1 or (-1) to determine the shift direction on the x axis 
     final side = size.width < size.height ? size.width : size.height;
     _prevAngle = this.initialAngle;
     for (int i = 0; i < _subParts.length; i++) {
@@ -62,9 +63,11 @@ class PieChartPainter extends CustomPainter {
         _paintList[i],
       );
       final radius = showChartValuesOutside ? side * 0.52 : side / 3;
+      // number of pixels to shift if labels do clutter (if the percentage < 3%)
+      final margin = (!_subParts.contains(0) && (_subParts.elementAt(i) / _total) < 0.03 ? 13: 0 )*marginSide;
       final x = (radius) *
           math.cos(
-              _prevAngle + ((((_totalAngle) / _total) * _subParts[i]) / 2));
+              _prevAngle + ((((_totalAngle) / _total) * _subParts[i]) / 2)) + margin;
       final y = (radius) *
           math.sin(
               _prevAngle + ((((_totalAngle) / _total) * _subParts[i]) / 2));
@@ -76,6 +79,7 @@ class PieChartPainter extends CustomPainter {
             : _subParts.elementAt(i).toStringAsFixed(this.decimalPlaces);
 
         _drawName(canvas, name, x, y, side);
+        marginSide *= -1; // switch the margin side for the next label to avoid shifting in the same direction
       }
       _prevAngle = _prevAngle + (((_totalAngle) / _total) * _subParts[i]);
     }
