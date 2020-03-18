@@ -114,7 +114,7 @@ class _CountriesPageState extends State<CountriesPage> {
                     Text(
                       "Total Cases",
                       style: TextStyle(
-                          fontSize: 10, color: Colors.white.withOpacity(0.6)),
+                          fontSize: 10, color: Colors.white.withOpacity(0.8)),
                     ),
                   ],
                 ),
@@ -218,7 +218,7 @@ class _CountriesPageState extends State<CountriesPage> {
                       "Recovered",
                       style: TextStyle(
                           fontSize: 10,
-                          color: Color(0xff9ff794).withOpacity(0.6)),
+                          color: Color(0xff9ff794).withOpacity(0.8)),
                     ),
                   ],
                 ),

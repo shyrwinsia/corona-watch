@@ -97,7 +97,7 @@ class _CustomGraph extends StatelessWidget {
           initialAngle: 4.5,
           chartType: ChartType.ring,
           chartValueStyle: TextStyle(
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withOpacity(0.8),
           ),
           title: title,
         ),
@@ -142,7 +142,7 @@ class _StatTile extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                    fontSize: 14, color: Colors.white.withOpacity(0.6)),
+                    fontSize: 14, color: Colors.white.withOpacity(0.8)),
               ),
             ],
           ),
