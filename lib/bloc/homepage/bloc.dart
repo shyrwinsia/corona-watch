@@ -30,7 +30,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
       final CovidStats stats = await RestApi.fetch();
       yield Loaded(stats: stats);
     } on RestApiException catch (e) {
-      yield Wtf(error: e.toString());
+      yield Wtf(exception: e);
     }
   }
 }

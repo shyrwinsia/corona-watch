@@ -13,7 +13,7 @@ class RestApi {
   static const URL_COUNTRIES = 'http://$HOST/countries';
   static const TIMEOUT = 10;
   static const SLEEP = 1000;
-  static const TIME_UNTIL_NEXT_FETCH = 30000;
+  static const TIME_UNTIL_NEXT_FETCH = 100;
   static const FAKE_FETCH_TIME = 1985;
 
   static Future<CovidStats> fetch() async {
@@ -48,7 +48,9 @@ class RestApi {
       } on TimeoutException catch (e) {
         print(e.toString());
         throw RestApiException(
-            "I couldn't reach the server. 😔\nTry again after a while.");
+          cause: "Can't reach the server",
+          action: "Try again after a while",
+        );
       }
     } else {
       // just some arbitrary number to make
@@ -94,12 +96,19 @@ class RestApi {
   static void _checkResponseCode(response) {
     if (response.statusCode == 200)
       return;
-    else if (response.statusCode == 429)
+    else if (response.statusCode == 429) {
+      String action = response.headers['retry-after'] != null
+          ? "Retry after ${response.headers['retry-after']} seconds"
+          : 'Retry after a few minutes';
       throw RestApiException(
-          'Request limit reached. 😵\nRetry after ${response.headers['retry-after']} seconds.');
-    else
+        cause: 'Request limit reached',
+        action: action,
+      );
+    } else
       throw RestApiException(
-          'Request failed. 😲\nHTTP ${response.statusCode}: ${response.reasonPhrase}');
+        cause: 'Error ${response.statusCode}: ${response.reasonPhrase}',
+        action: 'Please send a screenshot to developer',
+      );
   }
 
   static Future _sleep(int millis) {
@@ -108,9 +117,10 @@ class RestApi {
 }
 
 class RestApiException implements Exception {
-  final String message;
+  final String cause;
+  final String action;
 
-  RestApiException(this.message);
+  RestApiException({this.cause, this.action});
 
-  String toString() => this.message;
+  String toString() => "${this.cause} ${this.action}";
 }

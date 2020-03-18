@@ -82,7 +82,7 @@ class PieChartPainter extends CustomPainter {
 
     TextSpan span = TextSpan(
       style: TextStyle(
-        color: Colors.white.withOpacity(0.6),
+        color: Colors.white.withOpacity(0.8),
         fontWeight: FontWeight.bold,
         fontSize: 18,
       ),

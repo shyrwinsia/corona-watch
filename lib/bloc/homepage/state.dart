@@ -32,12 +32,12 @@ class Loaded extends HomePageState {
 }
 
 class Wtf extends HomePageState {
-  final String error;
+  final RestApiException exception;
 
-  Wtf({this.error});
+  Wtf({this.exception});
 
   @override
-  String toString() => '[State] HomePageState: Wtf {$error}';
+  String toString() => '[State] HomePageState: Wtf {$exception}';
 
-  List<Object> get props => [this.error];
+  List<Object> get props => [this.exception];
 }

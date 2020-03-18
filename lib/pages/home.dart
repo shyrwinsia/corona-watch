@@ -60,9 +60,15 @@ class _HomePageState extends State<HomePage> {
     } else if (state is Loaded) {
       return _buildGlobalStats(state.stats);
     } else if (state is Wtf) {
-      return widget.buildError(state.error);
+      return widget.buildError(
+        cause: state.exception.cause,
+        action: state.exception.action,
+      );
     } else {
-      return widget.buildError('Something went wrong');
+      return widget.buildError(
+        cause: 'Something went wrong',
+        action: 'Please restart app',
+      );
     }
   }
 
@@ -80,10 +86,10 @@ class _HomePageState extends State<HomePage> {
             'Fetching latest updates',
             style: TextStyle(fontSize: 14, color: Colors.white),
           ),
-          SizedBox(height: 4),
           Text(
             'Source: worldometers.info',
-            style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(.6)),
+            style:
+                TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.8)),
           ),
         ],
       ),
