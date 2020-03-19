@@ -18,6 +18,8 @@ class _CountriesPageState extends State<CountriesPage> {
   SortBy _sortBy = SortBy.total;
   OrderBy _orderBy = OrderBy.desc;
 
+  final ScrollController _scroller = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +58,11 @@ class _CountriesPageState extends State<CountriesPage> {
                     _sortBy = sortBy;
                     _orderBy = orderBy;
                     _current = stats;
+                    _scroller.animateTo(
+                      0.0,
+                      curve: Curves.fastLinearToSlowEaseIn,
+                      duration: const Duration(seconds: 1),
+                    );
                   },
                 ),
               ),
@@ -66,6 +73,7 @@ class _CountriesPageState extends State<CountriesPage> {
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
         child: ListView.separated(
+            controller: _scroller,
             itemCount: _current.length,
             separatorBuilder: (BuildContext context, int index) =>
                 Divider(color: Colors.white38),
@@ -203,5 +211,11 @@ class _CountriesPageState extends State<CountriesPage> {
     RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
     Function mathFunc = (Match match) => '${match[1]},';
     return num.toString().replaceAllMapped(reg, mathFunc);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scroller.dispose();
   }
 }
