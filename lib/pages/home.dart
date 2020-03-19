@@ -86,10 +86,11 @@ class _HomePageState extends State<HomePage> {
             'Fetching latest updates',
             style: TextStyle(fontSize: 14, color: Colors.white),
           ),
+          SizedBox(height: 2),
           Text(
             'Source: worldometers.info',
             style:
-                TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.8)),
+                TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.6)),
           ),
         ],
       ),

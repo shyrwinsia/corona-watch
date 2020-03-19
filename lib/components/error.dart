@@ -14,15 +14,16 @@ mixin ErrorMixin on Widget {
             size: 48,
             color: Color(0xffff653b),
           ),
-          SizedBox(height: 12),
+          SizedBox(height: 14),
           Text(
             cause,
             style: TextStyle(fontSize: 14, color: Colors.white),
           ),
+          SizedBox(height: 2),
           Text(
             action,
             style:
-                TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.8)),
+                TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.6)),
           ),
         ],
       ),

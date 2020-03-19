@@ -24,7 +24,7 @@ class GlobalGraph extends StatelessWidget {
         _StatTile(Color(0xfff5c76a), 'Active', stats.active),
         _StatTile(Color(0xffff653b), 'Deaths', stats.deaths),
         _StatTile(Color(0xff9ff794), 'Recovered', stats.recovered),
-        SizedBox(height: 10),
+        SizedBox(height: 12),
         Text(
           'Last update ${timeago.format((stats.updated))}',
           style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10),
@@ -140,15 +140,14 @@ class _StatTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Icon(FeatherIcons.circle,
-                  color: color.withOpacity(0.8), size: 10),
+              Icon(FeatherIcons.circle, color: color, size: 10),
               SizedBox(
                 width: 6,
               ),
               Text(
                 label,
                 style: TextStyle(
-                    fontSize: 14, color: Colors.white.withOpacity(0.8)),
+                    fontSize: 14, color: Colors.white.withOpacity(0.6)),
               ),
             ],
           ),
