@@ -76,9 +76,6 @@ class _CountriesPageState extends State<CountriesPage> {
   }
 
   Widget _buildTile(CountryStats stats) {
-    RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-    Function mathFunc = (Match match) => '${match[1]},';
-
     return InkWell(
       onTap: () => Navigator.push(
         context,
@@ -102,131 +99,109 @@ class _CountriesPageState extends State<CountriesPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: <Widget>[
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      stats.cases.toString().replaceAllMapped(reg, mathFunc),
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                    Text(
-                      "Total Cases",
-                      style: TextStyle(
-                          fontSize: 10, color: Colors.white.withOpacity(0.8)),
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    (stats.todayCases != 0)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: <Widget>[
-                              Text(
-                                stats.active
-                                    .toString()
-                                    .replaceAllMapped(reg, mathFunc),
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                              SizedBox(width: 2),
-                              Icon(
-                                FeatherIcons.arrowUp,
-                                size: 10,
-                              ),
-                              Text(
-                                "${stats.todayCases.toString().replaceAllMapped(reg, mathFunc)}",
-                                style: TextStyle(
-                                    fontSize: 10, color: Colors.white),
-                              ),
-                            ],
-                          )
-                        : Text(
-                            stats.active
-                                .toString()
-                                .replaceAllMapped(reg, mathFunc),
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                    Text(
-                      "Active",
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: Color(0xfff5c76a).withOpacity(0.8)),
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    (stats.todayDeaths != 0)
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: <Widget>[
-                              Text(
-                                stats.deaths
-                                    .toString()
-                                    .replaceAllMapped(reg, mathFunc),
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white),
-                              ),
-                              SizedBox(width: 2),
-                              Icon(
-                                FeatherIcons.arrowUp,
-                                size: 10,
-                              ),
-                              Text(
-                                "${stats.todayDeaths.toString().replaceAllMapped(reg, mathFunc)}",
-                                style: TextStyle(
-                                    fontSize: 10, color: Colors.white),
-                              ),
-                            ],
-                          )
-                        : Text(
-                            stats.deaths
-                                .toString()
-                                .replaceAllMapped(reg, mathFunc),
-                            style: TextStyle(fontSize: 16, color: Colors.white),
-                          ),
-                    Text(
-                      "Deaths",
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: Color(0xffff653b).withOpacity(0.8)),
-                    ),
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      stats.recovered
-                          .toString()
-                          .replaceAllMapped(reg, mathFunc),
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
-                    Text(
-                      "Recovered",
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: Color(0xff9ff794).withOpacity(0.8)),
-                    ),
-                  ],
-                ),
-              ],
+              children: _buildStats(stats),
             )
           ],
         ),
       ),
     );
+  }
+
+  List<Widget> _buildStats(CountryStats stats) {
+    switch (_sortBy) {
+      case SortBy.total:
+      case SortBy.alphabetical:
+        return [
+          _buildStat(
+              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
+          _buildStat('Active', stats.active, stats.todayCases,
+              Color(0xfff5c76a).withOpacity(0.8)),
+          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
+              Color(0xffff653b).withOpacity(0.8)),
+          _buildStat('Recovered', stats.recovered, 0,
+              Color(0xff9ff794).withOpacity(0.8)),
+        ];
+      case SortBy.active:
+      case SortBy.todayActive:
+        return [
+          _buildStat('Active', stats.active, stats.todayCases,
+              Color(0xfff5c76a).withOpacity(0.8)),
+          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
+              Color(0xffff653b).withOpacity(0.8)),
+          _buildStat('Recovered', stats.recovered, 0,
+              Color(0xff9ff794).withOpacity(0.8)),
+          _buildStat(
+              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
+        ];
+      case SortBy.deaths:
+      case SortBy.todayDeaths:
+        return [
+          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
+              Color(0xffff653b).withOpacity(0.8)),
+          _buildStat('Recovered', stats.recovered, 0,
+              Color(0xff9ff794).withOpacity(0.8)),
+          _buildStat('Active', stats.active, stats.todayCases,
+              Color(0xfff5c76a).withOpacity(0.8)),
+          _buildStat(
+              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
+        ];
+      case SortBy.recovered:
+        return [
+          _buildStat('Recovered', stats.recovered, 0,
+              Color(0xff9ff794).withOpacity(0.8)),
+          _buildStat('Active', stats.active, stats.todayCases,
+              Color(0xfff5c76a).withOpacity(0.8)),
+          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
+              Color(0xffff653b).withOpacity(0.8)),
+          _buildStat(
+              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
+        ];
+      default:
+        return [];
+    }
+  }
+
+  Widget _buildStat(String label, int base, int increase, Color color) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        (increase != 0)
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
+                children: <Widget>[
+                  Text(
+                    _convert(base),
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  SizedBox(width: 2),
+                  Icon(
+                    FeatherIcons.arrowUp,
+                    size: 10,
+                  ),
+                  Text(
+                    "${_convert(increase)}",
+                    style: TextStyle(fontSize: 10, color: Colors.white),
+                  ),
+                ],
+              )
+            : Text(
+                _convert(base),
+                style: TextStyle(fontSize: 16, color: Colors.white),
+              ),
+        Text(
+          label,
+          style: TextStyle(fontSize: 10, color: color),
+        ),
+      ],
+    );
+  }
+
+  String _convert(int num) {
+    RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    Function mathFunc = (Match match) => '${match[1]},';
+    return num.toString().replaceAllMapped(reg, mathFunc);
   }
 }
