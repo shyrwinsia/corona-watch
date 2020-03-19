@@ -2,6 +2,7 @@ import 'package:covidwatch/data/model.dart';
 import 'package:covidwatch/extras/chart/pie_chart.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class GlobalGraph extends StatelessWidget {
   final Map<String, double> dataMap = Map();
@@ -18,11 +19,16 @@ class GlobalGraph extends StatelessWidget {
     return Column(
       children: <Widget>[
         _CustomGraph(dataMap, "Worldwide"),
-        SizedBox(height: 32),
+        SizedBox(height: 24),
         _StatTile(Color(0xffffffff), 'Total Cases', stats.cases),
         _StatTile(Color(0xfff5c76a), 'Active', stats.active),
         _StatTile(Color(0xffff653b), 'Deaths', stats.deaths),
         _StatTile(Color(0xff9ff794), 'Recovered', stats.recovered),
+        SizedBox(height: 10),
+        Text(
+          'Last update ${timeago.format((stats.updated))}',
+          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10),
+        )
       ],
     );
   }
@@ -43,7 +49,7 @@ class CountryGraph extends StatelessWidget {
     return Column(
       children: <Widget>[
         _CustomGraph(dataMap, stats.country),
-        SizedBox(height: 32),
+        SizedBox(height: 24),
         _StatTile(
           Color(0xffffffff),
           'Total Cases',
@@ -97,7 +103,7 @@ class _CustomGraph extends StatelessWidget {
           initialAngle: 4.5,
           chartType: ChartType.ring,
           chartValueStyle: TextStyle(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withOpacity(0.6),
           ),
           title: title,
         ),
