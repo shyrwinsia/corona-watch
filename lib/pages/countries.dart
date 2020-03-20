@@ -1,89 +1,123 @@
 import 'package:covidwatch/components/countrydetail.dart';
-import 'package:covidwatch/components/sort.dart';
+import 'package:covidwatch/components/error.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:covidwatch/bloc/countriespage/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:covidwatch/pages/sort.dart';
 
-class CountriesPage extends StatefulWidget {
-  final CountryList stats;
+class CountriesPage extends StatefulWidget with ErrorMixin {
+  final CountryList countries;
 
-  CountriesPage(this.stats);
+  CountriesPage(this.countries);
   @override
   State<StatefulWidget> createState() => _CountriesPageState();
 }
 
 class _CountriesPageState extends State<CountriesPage> {
-  List<CountryStats> _current;
-
-  SortBy _sortBy = SortBy.total;
-  OrderBy _orderBy = OrderBy.desc;
-
   final ScrollController _scroller = ScrollController();
+  CountriesPageBloc _bloc;
 
   @override
   void initState() {
     super.initState();
-    this._current = widget.stats.list;
+    _bloc = CountriesPageBloc()
+      ..add(LoadCountryList(countries: widget.countries));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(FeatherIcons.chevronLeft),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          "COUNTRIES",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Sort'),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (BuildContext context) => SortbyDialog(
-                list: _current,
-                sortBy: _sortBy,
-                orderBy: _orderBy,
-                stateSetter: (SortBy sortBy, OrderBy orderBy,
-                        List<CountryStats> stats) =>
-                    setState(
-                  () {
-                    _sortBy = sortBy;
-                    _orderBy = orderBy;
-                    _current = stats;
-                    _scroller.animateTo(
-                      0.0,
-                      curve: Curves.fastLinearToSlowEaseIn,
-                      duration: const Duration(seconds: 1),
-                    );
+    return BlocBuilder<CountriesPageBloc, CountriesPageState>(
+      bloc: _bloc,
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(FeatherIcons.chevronLeft),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            title: Text(
+              "COUNTRIES",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            centerTitle: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Sort'),
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SortPage()),
+                ).then(
+                  (value) {
+                    _bloc.add(LoadCountryList(countries: widget.countries));
+                    _scroller.animateTo(0,
+                        duration: Duration(milliseconds: 2000),
+                        curve: Curves.fastLinearToSlowEaseIn);
                   },
                 ),
               ),
-            ),
+            ],
+          ),
+          body: _buildBody(context, state),
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(BuildContext context, CountriesPageState state) {
+    if (state is Loading) {
+      return _buildLoading();
+    } else if (state is Loaded) {
+      return _buildCountriesList(context, state.countries.list, state.sortBy);
+    } else if (state is Wtf) {
+      return widget.buildError(
+        cause: state.exception.cause,
+        action: state.exception.action,
+      );
+    } else {
+      return widget.buildError(
+        cause: 'Something went wrong',
+        action: 'Please restart app',
+      );
+    }
+  }
+
+  Widget _buildCountriesList(BuildContext context, List list, SortBy sortBy) {
+    return ListView.separated(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      controller: _scroller,
+      itemCount: list.length,
+      separatorBuilder: (BuildContext context, int index) =>
+          Divider(color: Colors.white38),
+      itemBuilder: (BuildContext context, int index) =>
+          _buildTile(context, list[index], sortBy),
+    );
+  }
+
+  Widget _buildLoading() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+          SizedBox(height: 24),
+          Text(
+            'Loading countries',
+            style: TextStyle(fontSize: 14, color: Colors.white),
           ),
         ],
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: ListView.separated(
-            controller: _scroller,
-            itemCount: _current.length,
-            separatorBuilder: (BuildContext context, int index) =>
-                Divider(color: Colors.white38),
-            itemBuilder: (BuildContext context, int index) =>
-                _buildTile(_current[index])),
       ),
     );
   }
 
-  Widget _buildTile(CountryStats stats) {
+  Widget _buildTile(BuildContext context, CountryStats stats, SortBy sortBy) {
     return InkWell(
       onTap: () => Navigator.push(
         context,
@@ -107,7 +141,7 @@ class _CountriesPageState extends State<CountriesPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.end,
-              children: _buildStats(stats),
+              children: _buildStats(stats, sortBy),
             )
           ],
         ),
@@ -115,54 +149,38 @@ class _CountriesPageState extends State<CountriesPage> {
     );
   }
 
-  List<Widget> _buildStats(CountryStats stats) {
-    switch (_sortBy) {
+  List<Widget> _buildStats(CountryStats stats, SortBy sortBy) {
+    switch (sortBy) {
       case SortBy.total:
       case SortBy.alphabetical:
         return [
-          _buildStat(
-              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
-          _buildStat('Active', stats.active, stats.todayCases,
-              Color(0xfff5c76a).withOpacity(0.8)),
-          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
-              Color(0xffff653b).withOpacity(0.8)),
-          _buildStat('Recovered', stats.recovered, 0,
-              Color(0xff9ff794).withOpacity(0.8)),
+          _buildTotal(stats.cases),
+          _buildActive(stats.active, stats.todayCases),
+          _buildDeaths(stats.deaths, stats.todayDeaths),
+          _buildRecovered(stats.recovered),
         ];
       case SortBy.active:
       case SortBy.todayActive:
         return [
-          _buildStat('Active', stats.active, stats.todayCases,
-              Color(0xfff5c76a).withOpacity(0.8)),
-          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
-              Color(0xffff653b).withOpacity(0.8)),
-          _buildStat('Recovered', stats.recovered, 0,
-              Color(0xff9ff794).withOpacity(0.8)),
-          _buildStat(
-              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
+          _buildActive(stats.active, stats.todayCases),
+          _buildDeaths(stats.deaths, stats.todayDeaths),
+          _buildRecovered(stats.recovered),
+          _buildTotal(stats.cases),
         ];
       case SortBy.deaths:
       case SortBy.todayDeaths:
         return [
-          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
-              Color(0xffff653b).withOpacity(0.8)),
-          _buildStat('Recovered', stats.recovered, 0,
-              Color(0xff9ff794).withOpacity(0.8)),
-          _buildStat('Active', stats.active, stats.todayCases,
-              Color(0xfff5c76a).withOpacity(0.8)),
-          _buildStat(
-              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
+          _buildDeaths(stats.deaths, stats.todayDeaths),
+          _buildRecovered(stats.recovered),
+          _buildActive(stats.active, stats.todayCases),
+          _buildTotal(stats.cases),
         ];
       case SortBy.recovered:
         return [
-          _buildStat('Recovered', stats.recovered, 0,
-              Color(0xff9ff794).withOpacity(0.8)),
-          _buildStat('Active', stats.active, stats.todayCases,
-              Color(0xfff5c76a).withOpacity(0.8)),
-          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
-              Color(0xffff653b).withOpacity(0.8)),
-          _buildStat(
-              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
+          _buildRecovered(stats.recovered),
+          _buildActive(stats.active, stats.todayCases),
+          _buildDeaths(stats.deaths, stats.todayDeaths),
+          _buildTotal(stats.cases),
         ];
       default:
         return [];
@@ -218,4 +236,16 @@ class _CountriesPageState extends State<CountriesPage> {
     super.dispose();
     _scroller.dispose();
   }
+
+  Widget _buildTotal(cases) =>
+      _buildStat('Total Cases', cases, 0, Colors.white.withOpacity(0.8));
+
+  Widget _buildActive(active, todayCases) => _buildStat(
+      'Active', active, todayCases, Color(0xfff5c76a).withOpacity(0.8));
+
+  Widget _buildDeaths(deaths, todayDeaths) => _buildStat(
+      'Deaths', deaths, todayDeaths, Color(0xffff653b).withOpacity(0.8));
+
+  Widget _buildRecovered(recovered) =>
+      _buildStat('Recovered', recovered, 0, Color(0xff9ff794).withOpacity(0.8));
 }

@@ -82,3 +82,14 @@ class Stats {
   Stats({this.globalStats, this.countryStats})
       : this.lastFetch = DateTime.now();
 }
+
+enum SortBy {
+  total,
+  active,
+  deaths,
+  todayActive,
+  todayDeaths,
+  recovered,
+  alphabetical,
+}
+enum OrderBy { desc, asc }
