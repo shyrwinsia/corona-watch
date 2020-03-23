@@ -2,6 +2,7 @@ import 'package:covidwatch/bloc/homepage/bloc.dart';
 import 'package:covidwatch/components/error.dart';
 import 'package:covidwatch/components/graph.dart';
 import 'package:covidwatch/data/model.dart';
+import 'package:covidwatch/pages/countries.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,6 +48,69 @@ class _HomePageState extends State<HomePage> {
           body: Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: _buildBody(context, state),
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.transparent,
+            selectedItemColor: Color(0xff8fa7f4),
+            onTap: (int index) {
+              if (state is Loaded)
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            CountriesPage(state.stats.countryList)));
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(
+                  FeatherIcons.barChart2,
+                  size: 16,
+                ),
+                title: Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      'Summary',
+                      style: TextStyle(fontSize: 12),
+                    )),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  FeatherIcons.globe,
+                  size: 16,
+                ),
+                title: Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      'Countries',
+                      style: TextStyle(fontSize: 12),
+                    )),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  FeatherIcons.eye,
+                  size: 16,
+                ),
+                title: Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      'Watchlist',
+                      style: TextStyle(fontSize: 12),
+                    )),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(
+                  FeatherIcons.search,
+                  size: 16,
+                ),
+                title: Padding(
+                    padding: EdgeInsets.only(top: 2),
+                    child: Text(
+                      'Search',
+                      style: TextStyle(fontSize: 12),
+                    )),
+              ),
+            ],
           ),
         );
       },

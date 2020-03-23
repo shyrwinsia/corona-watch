@@ -107,30 +107,27 @@ class _CustomGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        PieChart(
-          dataMap: dataMap,
-          animationDuration: Duration(milliseconds: 800),
-          chartRadius: MediaQuery.of(context).size.width / 1.6,
-          showChartValuesInPercentage: true,
-          showChartValues: false,
-          showChartValuesOutside: true,
-          colorList: [Color(0xfff5c76a), Color(0xffff653b), Color(0xff9ff794)],
-          showLegends: false,
-          decimalPlaces: 1,
-          showChartValueLabel: true,
-          initialAngle: 4.5,
-          chartType: ChartType.ring,
-          chartValueStyle: TextStyle(
-            color: Colors.white.withOpacity(0.6),
-            fontSize: 12,
-          ),
-          title: title,
-        ),
-      ],
+    double chartRadiusFactor =
+        MediaQuery.of(context).size.aspectRatio > 0.6 ? 0.5 : 0.625;
+    double fontSize = MediaQuery.of(context).size.aspectRatio > 0.6 ? 10 : 12;
+    return PieChart(
+      dataMap: dataMap,
+      animationDuration: Duration(milliseconds: 800),
+      chartRadius: MediaQuery.of(context).size.width * chartRadiusFactor,
+      showChartValuesInPercentage: true,
+      showChartValues: false,
+      showChartValuesOutside: true,
+      colorList: [Color(0xfff5c76a), Color(0xffff653b), Color(0xff9ff794)],
+      showLegends: false,
+      decimalPlaces: 1,
+      showChartValueLabel: true,
+      initialAngle: 4.5,
+      chartType: ChartType.ring,
+      chartValueStyle: TextStyle(
+        color: Colors.white.withOpacity(0.6),
+        fontSize: fontSize,
+      ),
+      title: title,
     );
   }
 }
