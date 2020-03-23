@@ -1,6 +1,8 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:covidwatch/components/sortdialog.dart';
+
+import '../components/sortdialog.dart';
 
 class SortPage extends StatefulWidget {
   @override
@@ -8,6 +10,12 @@ class SortPage extends StatefulWidget {
 }
 
 class _SortPageState extends State<SortPage> {
+  @override
+  void initState() {
+    super.initState();
+    // laad the sort params
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,9 +50,10 @@ class _SortPageState extends State<SortPage> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
           subtitle: Text('Total Cases', style: TextStyle(fontSize: 12)),
-          onTap: () async {
-            final prefs = await SharedPreferences.getInstance();
-            prefs.setInt('sortBy', 2);
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => SortByDialog());
           },
         ),
         ListTile(
@@ -53,6 +62,11 @@ class _SortPageState extends State<SortPage> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
           subtitle: Text('Highest First', style: TextStyle(fontSize: 12)),
+          onTap: () {
+            showDialog(
+                context: context,
+                builder: (BuildContext context) => OrderByDialog());
+          },
         ),
       ],
       color: Colors.white38,
