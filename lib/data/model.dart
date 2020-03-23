@@ -93,3 +93,5 @@ enum SortBy {
   alphabetical,
 }
 enum OrderBy { desc, asc }
+
+const WORLDOMETERS_URL = "https://www.worldometers.info/coronavirus/";

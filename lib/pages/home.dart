@@ -2,7 +2,6 @@ import 'package:covidwatch/bloc/homepage/bloc.dart';
 import 'package:covidwatch/components/error.dart';
 import 'package:covidwatch/components/graph.dart';
 import 'package:covidwatch/data/model.dart';
-import 'package:covidwatch/pages/countries.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -103,13 +102,16 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         GlobalGraph(stats.globalStats),
-        FlatButton(
-            child: Text('View countries',
-                style: TextStyle(color: Color(0xff8fa7f4))),
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CountriesPage(stats.countryList)))),
+        // TODO: Replace with a tab
+        // FlatButton(
+        //   padding: EdgeInsets.all(0),
+        //   child: Text('View countries',
+        //       style: TextStyle(color: Color(0xff8fa7f4))),
+        //   onPressed: () => Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //           builder: (context) => CountriesPage(stats.countryList))),
+        // ),
       ],
     );
   }
