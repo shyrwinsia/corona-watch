@@ -2,7 +2,6 @@ import 'package:covidwatch/bloc/homepage/bloc.dart';
 import 'package:covidwatch/components/error.dart';
 import 'package:covidwatch/components/graph.dart';
 import 'package:covidwatch/data/model.dart';
-import 'package:covidwatch/pages/countries.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
