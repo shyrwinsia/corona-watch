@@ -53,6 +53,7 @@ class _HomePageState extends State<HomePage> {
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.transparent,
             selectedItemColor: Color(0xff8fa7f4),
+            unselectedItemColor: Colors.white.withOpacity(0.4),
             onTap: (int index) {
               if (state is Loaded)
                 Navigator.push(
@@ -161,23 +162,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildGlobalStats(CovidStats stats) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        GlobalGraph(stats.globalStats),
-        // TODO: Replace with a tab
-        // FlatButton(
-        //   padding: EdgeInsets.all(0),
-        //   child: Text('View countries',
-        //       style: TextStyle(color: Color(0xff8fa7f4))),
-        //   onPressed: () => Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //           builder: (context) => CountriesPage(stats.countryList))),
-        // ),
-      ],
-    );
+    return GlobalGraph(stats.globalStats);
   }
 
   @override

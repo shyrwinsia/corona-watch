@@ -18,7 +18,8 @@ class PieChartPainter extends CustomPainter {
   final int decimalPlaces;
   final bool showChartValueLabel;
   final ChartType chartType;
-  final String title;
+  final String chartTitle;
+  final TextStyle chartTitleStyle;
 
   double _prevAngle = 0;
 
@@ -34,7 +35,8 @@ class PieChartPainter extends CustomPainter {
     this.decimalPlaces,
     this.showChartValueLabel,
     this.chartType,
-    this.title,
+    this.chartTitle,
+    this.chartTitleStyle,
   }) {
     for (int i = 0; i < values.length; i++) {
       final paint = Paint()..color = _getColor(colorList, i);
@@ -92,12 +94,8 @@ class PieChartPainter extends CustomPainter {
     }
 
     TextSpan span = TextSpan(
-      style: TextStyle(
-        color: Colors.white.withOpacity(0.8),
-        fontWeight: FontWeight.bold,
-        fontSize: 18,
-      ),
-      text: this.title,
+      style: this.chartTitleStyle,
+      text: this.chartTitle,
     );
     TextPainter tp = TextPainter(
       text: span,

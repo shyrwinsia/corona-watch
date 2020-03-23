@@ -17,41 +17,49 @@ class GlobalGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _CustomGraph(dataMap, "Worldwide"),
-        SizedBox(height: 24),
-        _StatTile(Color(0xffffffff), 'Total Cases', stats.cases),
-        _StatTile(Color(0xfff5c76a), 'Active', stats.active),
-        _StatTile(Color(0xffff653b), 'Deaths', stats.deaths),
-        _StatTile(Color(0xff9ff794), 'Recovered', stats.recovered),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Last update ${timeago.format((stats.updated))}',
-              style:
-                  TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 10),
-            ),
-            FlatButton(
-              padding: EdgeInsets.all(0),
-              child: Text(
-                'Visit worldometers.info',
-                style: TextStyle(
-                    color: Color(0xff8fa7f4).withOpacity(0.6), fontSize: 10),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _CustomGraph(dataMap, "Worldwide"),
+          Column(
+            children: <Widget>[
+              _StatTile(Color(0xffffffff), 'Total Cases', stats.cases),
+              _StatTile(Color(0xfff5c76a), 'Active', stats.active),
+              _StatTile(Color(0xffff653b), 'Deaths', stats.deaths),
+              _StatTile(Color(0xff9ff794), 'Recovered', stats.recovered),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Last update ${timeago.format((stats.updated))}',
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.4), fontSize: 10),
+                  ),
+                  FlatButton(
+                    padding: EdgeInsets.all(0),
+                    child: Text(
+                      'Visit worldometers.info',
+                      style: TextStyle(
+                          color: Color(0xff8fa7f4).withOpacity(0.6),
+                          fontSize: 10),
+                    ),
+                    onPressed: () async {
+                      if (await canLaunch(WORLDOMETERS_URL)) {
+                        await launch(WORLDOMETERS_URL);
+                      } else {
+                        throw 'Could not launch $WORLDOMETERS_URL';
+                      }
+                    },
+                  ),
+                ],
               ),
-              onPressed: () async {
-                if (await canLaunch(WORLDOMETERS_URL)) {
-                  await launch(WORLDOMETERS_URL);
-                } else {
-                  throw 'Could not launch $WORLDOMETERS_URL';
-                }
-              },
-            )
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -110,6 +118,17 @@ class _CustomGraph extends StatelessWidget {
     double chartRadiusFactor =
         MediaQuery.of(context).size.aspectRatio > 0.6 ? 0.5 : 0.625;
     double fontSize = MediaQuery.of(context).size.aspectRatio > 0.6 ? 10 : 12;
+    TextStyle titleStyle = MediaQuery.of(context).size.aspectRatio > 0.6
+        ? TextStyle(
+            color: Colors.white.withOpacity(0.8),
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          )
+        : TextStyle(
+            color: Colors.white.withOpacity(0.8),
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          );
     return PieChart(
       dataMap: dataMap,
       animationDuration: Duration(milliseconds: 800),
@@ -127,7 +146,8 @@ class _CustomGraph extends StatelessWidget {
         color: Colors.white.withOpacity(0.6),
         fontSize: fontSize,
       ),
-      title: title,
+      chartTitle: title,
+      chartTitleStyle: titleStyle,
     );
   }
 }
