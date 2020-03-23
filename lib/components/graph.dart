@@ -3,6 +3,7 @@ import 'package:covidwatch/extras/chart/pie_chart.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:url_launcher/url_launcher.dart';
 
 class GlobalGraph extends StatelessWidget {
   final Map<String, double> dataMap = Map();
@@ -24,11 +25,32 @@ class GlobalGraph extends StatelessWidget {
         _StatTile(Color(0xfff5c76a), 'Active', stats.active),
         _StatTile(Color(0xffff653b), 'Deaths', stats.deaths),
         _StatTile(Color(0xff9ff794), 'Recovered', stats.recovered),
-        SizedBox(height: 12),
-        Text(
-          'Last update ${timeago.format((stats.updated))}',
-          style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 10),
-        )
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Last update ${timeago.format((stats.updated))}',
+              style:
+                  TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 10),
+            ),
+            FlatButton(
+              padding: EdgeInsets.all(0),
+              child: Text(
+                'Visit worldometers.info',
+                style: TextStyle(
+                    color: Color(0xff8fa7f4).withOpacity(0.6), fontSize: 10),
+              ),
+              onPressed: () async {
+                if (await canLaunch(WORLDOMETERS_URL)) {
+                  await launch(WORLDOMETERS_URL);
+                } else {
+                  throw 'Could not launch $WORLDOMETERS_URL';
+                }
+              },
+            )
+          ],
+        ),
       ],
     );
   }
@@ -104,6 +126,7 @@ class _CustomGraph extends StatelessWidget {
           chartType: ChartType.ring,
           chartValueStyle: TextStyle(
             color: Colors.white.withOpacity(0.6),
+            fontSize: 12,
           ),
           title: title,
         ),

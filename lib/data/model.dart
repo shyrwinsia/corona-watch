@@ -82,3 +82,5 @@ class Stats {
   Stats({this.globalStats, this.countryStats})
       : this.lastFetch = DateTime.now();
 }
+
+const WORLDOMETERS_URL = "https://www.worldometers.info/coronavirus/";

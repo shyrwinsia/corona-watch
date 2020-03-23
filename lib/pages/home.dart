@@ -103,13 +103,16 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         GlobalGraph(stats.globalStats),
-        FlatButton(
-            child: Text('View countries',
-                style: TextStyle(color: Color(0xff8fa7f4))),
-            onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CountriesPage(stats.countryList)))),
+        // TODO: Replace with a tab
+        // FlatButton(
+        //   padding: EdgeInsets.all(0),
+        //   child: Text('View countries',
+        //       style: TextStyle(color: Color(0xff8fa7f4))),
+        //   onPressed: () => Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //           builder: (context) => CountriesPage(stats.countryList))),
+        // ),
       ],
     );
   }
