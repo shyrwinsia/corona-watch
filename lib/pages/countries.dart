@@ -31,10 +31,6 @@ class _CountriesPageState extends State<CountriesPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(FeatherIcons.chevronLeft),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         title: Text(
           "COUNTRIES",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
