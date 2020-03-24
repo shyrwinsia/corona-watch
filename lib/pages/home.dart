@@ -1,18 +1,21 @@
 import 'package:covidwatch/bloc/homepage/bloc.dart';
 import 'package:covidwatch/components/error.dart';
-import 'package:covidwatch/components/graph.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:covidwatch/pages/countries.dart';
+import 'package:covidwatch/pages/dummy.dart';
+import 'package:covidwatch/pages/summary.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget with ErrorMixin {
   @override
-  State<StatefulWidget> createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  int _currentIndex = 0;
+
   HomePageBloc _bloc;
 
   @override
@@ -26,160 +29,133 @@ class _HomePageState extends State<HomePage> {
     return BlocBuilder<HomePageBloc, HomePageState>(
       bloc: _bloc,
       builder: (context, state) {
-        return Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            title: Text(
-              "COVID WATCH",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        if (state is Loading) {
+          return _buildLoading();
+        } else if (state is Loaded) {
+          return _buildBody(state.stats);
+        } else if (state is Wtf) {
+          return _buildError(
+            widget.buildError(
+              cause: state.exception.cause,
+              action: state.exception.action,
             ),
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            actions: <Widget>[
-              if (state is Loaded || state is Wtf)
-                IconButton(
-                    icon: Icon(FeatherIcons.refreshCw),
-                    iconSize: 16,
-                    onPressed: () =>
-                        _bloc.add(LoadGlobalStats())), // the fetch event here
-            ],
-          ),
-          body: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: _buildBody(context, state),
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.transparent,
-            selectedItemColor: Color(0xff8fa7f4),
-            unselectedItemColor: Colors.white.withOpacity(0.4),
-            onTap: (int index) {
-              if (state is Loaded)
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            CountriesPage(state.stats.countryList)));
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FeatherIcons.barChart2,
-                  size: 16,
-                ),
-                title: Padding(
-                    padding: EdgeInsets.only(top: 2),
-                    child: Text(
-                      'Summary',
-                      style: TextStyle(fontSize: 12),
-                    )),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FeatherIcons.globe,
-                  size: 16,
-                ),
-                title: Padding(
-                    padding: EdgeInsets.only(top: 2),
-                    child: Text(
-                      'Countries',
-                      style: TextStyle(fontSize: 12),
-                    )),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FeatherIcons.eye,
-                  size: 16,
-                ),
-                title: Padding(
-                    padding: EdgeInsets.only(top: 2),
-                    child: Text(
-                      'Watchlist',
-                      style: TextStyle(fontSize: 12),
-                    )),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(
-                  FeatherIcons.search,
-                  size: 16,
-                ),
-                title: Padding(
-                    padding: EdgeInsets.only(top: 2),
-                    child: Text(
-                      'Search',
-                      style: TextStyle(fontSize: 12),
-                    )),
-              ),
-            ],
-          ),
-        );
+          );
+        } else {
+          return _buildError(
+            widget.buildError(
+              cause: 'Something went wrong',
+              action: 'Please restart app',
+            ),
+          );
+        }
       },
     );
   }
 
-  Widget _buildBody(BuildContext context, HomePageState state) {
-    if (state is Loading) {
-      return _buildLoading();
-    } else if (state is Loaded) {
-      return _buildGlobalStats(state.stats);
-    } else if (state is Wtf) {
-      return widget.buildError(
-        cause: state.exception.cause,
-        action: state.exception.action,
-      );
-    } else {
-      return widget.buildError(
-        cause: 'Something went wrong',
-        action: 'Please restart app',
-      );
-    }
-  }
-
   Widget _buildLoading() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-          SizedBox(height: 24),
-          Text(
-            'Fetching latest updates',
-            style: TextStyle(fontSize: 14, color: Colors.white),
-          ),
-          SizedBox(height: 2),
-          Text(
-            'Source: worldometers.info',
-            style:
-                TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.6)),
-          ),
-        ],
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text(
+          "COVID WATCH",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+            SizedBox(height: 24),
+            Text(
+              'Fetching latest updates',
+              style: TextStyle(fontSize: 14, color: Colors.white),
+            ),
+            SizedBox(height: 2),
+            Text(
+              'Source: worldometers.info',
+              style:
+                  TextStyle(fontSize: 10, color: Colors.white.withOpacity(0.6)),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildGlobalStats(CovidStats stats) {
-    return GlobalGraph(stats.globalStats);
+  Widget _buildError(Widget error) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text(
+          "COVID WATCH",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(FeatherIcons.refreshCw),
+              iconSize: 16,
+              onPressed: () => _bloc.add(LoadGlobalStats())),
+        ],
+      ),
+      body: error,
+    );
   }
 
-  @override
-  void dispose() {
-    _bloc.close();
-    super.dispose();
+  Widget _buildBody(CovidStats stats) {
+    return Scaffold(
+      body: [
+        SummaryPage(stats.globalStats),
+        CountriesPage(stats.countryList),
+        DummyPage(),
+        DummyPage(),
+      ][_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.black,
+        selectedItemColor: Color(0xff8fa7f4),
+        unselectedItemColor: Colors.white.withOpacity(0.4),
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        items: pages.map((Page page) {
+          return BottomNavigationBarItem(
+            icon: Icon(page.icon, size: 18),
+            title: Padding(
+              padding: EdgeInsets.only(top: 6),
+              child: Text(
+                page.title,
+                style: TextStyle(fontSize: 10),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
   }
 }
 
-// [x] change circular progress color
-// [x] change refresh to button
-// [x] make the manual refresh work
-// [x] black splash screen
-// [x] error for no connection
-// [x] prevent landscape
-// [x] make private function
-// [x] add countries
-// [x] implement sort: total cases, alphabetical, new cases today, new deaths today
-// [x] goddamn clean yo dirty code
-// [-] add bloc to code
+class Page {
+  const Page(this.title, this.icon);
+  final String title;
+  final IconData icon;
+}
+
+const List<Page> pages = <Page>[
+  Page('Summary', FeatherIcons.barChart2),
+  Page('Countries', FeatherIcons.globe),
+  Page('Watchlist', FeatherIcons.eye),
+  Page('Search', FeatherIcons.search)
+];
