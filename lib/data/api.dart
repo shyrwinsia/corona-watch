@@ -51,6 +51,12 @@ class RestApi {
           cause: "Can't reach the server",
           action: "Try again after a while",
         );
+      } on SocketException catch (e) {
+        print(e.toString());
+        throw RestApiException(
+          cause: "No connection",
+          action: "Turn on your wifi or data",
+        );
       }
     } else {
       // just some arbitrary number to make
