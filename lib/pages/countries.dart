@@ -28,7 +28,6 @@ class _CountriesPageState extends State<CountriesPage> {
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
     return BlocBuilder<CountriesPageBloc, CountriesPageState>(
       bloc: _bloc,
       builder: (context, state) {
@@ -58,39 +57,6 @@ class _CountriesPageState extends State<CountriesPage> {
                     _scroller.animateTo(0,
                         duration: Duration(milliseconds: 2000),
                         curve: Curves.fastLinearToSlowEaseIn);
-=======
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text(
-          "COUNTRIES",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Sort'),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (BuildContext context) => SortbyDialog(
-                list: _current,
-                sortBy: _sortBy,
-                orderBy: _orderBy,
-                stateSetter: (SortBy sortBy, OrderBy orderBy,
-                        List<CountryStats> stats) =>
-                    setState(
-                  () {
-                    _sortBy = sortBy;
-                    _orderBy = orderBy;
-                    _current = stats;
-                    _scroller.animateTo(
-                      0.0,
-                      curve: Curves.fastLinearToSlowEaseIn,
-                      duration: const Duration(seconds: 1),
-                    );
->>>>>>> master
                   },
                 ),
               ),
@@ -103,7 +69,9 @@ class _CountriesPageState extends State<CountriesPage> {
   }
 
   Widget _buildBody(BuildContext context, CountriesPageState state) {
-    if (state is Loading) {
+    if (state is Uninitialized) {
+      return Container();
+    } else if (state is Loading) {
       return _buildLoading();
     } else if (state is Loaded) {
       return _buildCountriesList(context, state.countries.list, state.sortBy);
@@ -283,3 +251,7 @@ class _CountriesPageState extends State<CountriesPage> {
   Widget _buildRecovered(recovered) =>
       _buildStat('Recovered', recovered, 0, Color(0xff9ff794).withOpacity(0.8));
 }
+
+// TODO
+// - idea: move the sort params to root and just let it be propagated?
+// - sort the main list? so there is no flicker when loading?
