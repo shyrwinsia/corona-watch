@@ -28,6 +28,7 @@ class _CountriesPageState extends State<CountriesPage> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return BlocBuilder<CountriesPageBloc, CountriesPageState>(
       bloc: _bloc,
       builder: (context, state) {
@@ -57,6 +58,39 @@ class _CountriesPageState extends State<CountriesPage> {
                     _scroller.animateTo(0,
                         duration: Duration(milliseconds: 2000),
                         curve: Curves.fastLinearToSlowEaseIn);
+=======
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        title: Text(
+          "COUNTRIES",
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: <Widget>[
+          FlatButton(
+            child: Text('Sort'),
+            onPressed: () => showDialog(
+              context: context,
+              builder: (BuildContext context) => SortbyDialog(
+                list: _current,
+                sortBy: _sortBy,
+                orderBy: _orderBy,
+                stateSetter: (SortBy sortBy, OrderBy orderBy,
+                        List<CountryStats> stats) =>
+                    setState(
+                  () {
+                    _sortBy = sortBy;
+                    _orderBy = orderBy;
+                    _current = stats;
+                    _scroller.animateTo(
+                      0.0,
+                      curve: Curves.fastLinearToSlowEaseIn,
+                      duration: const Duration(seconds: 1),
+                    );
+>>>>>>> master
                   },
                 ),
               ),
