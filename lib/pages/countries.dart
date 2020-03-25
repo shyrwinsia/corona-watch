@@ -4,6 +4,8 @@ import 'package:covidwatch/data/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
+import '../components/flag.dart';
+
 class CountriesPage extends StatefulWidget {
   final CountryList stats;
 
@@ -15,7 +17,7 @@ class CountriesPage extends StatefulWidget {
 class _CountriesPageState extends State<CountriesPage> {
   List<CountryStats> _current;
 
-  SortBy _sortBy = SortBy.total;
+  SortBy _sortBy = SortBy.alphabetical;
   OrderBy _orderBy = OrderBy.desc;
 
   final ScrollController _scroller = ScrollController();
@@ -32,7 +34,7 @@ class _CountriesPageState extends State<CountriesPage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          "COUNTRIES",
+          "COUNTRIES AND TERRITORIES",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         centerTitle: true,
@@ -93,9 +95,17 @@ class _CountriesPageState extends State<CountriesPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              stats.country,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            Row(
+              children: <Widget>[
+                Flags.get(stats.country),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  stats.country,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
             ),
             SizedBox(
               height: 16,

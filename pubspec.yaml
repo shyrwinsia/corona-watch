@@ -27,6 +27,7 @@ dependencies:
   # others
   timeago: ^2.0.26
   url_launcher: ^5.4.2
+  flutter_svg: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -40,3 +41,5 @@ flutter:
         - asset: fonts/Arimo-Regular.ttf
         - asset: fonts/Arimo-Bold.ttf
           weight: 700
+  assets:
+    - flags/
