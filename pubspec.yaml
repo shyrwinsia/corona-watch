@@ -42,4 +42,4 @@ flutter:
         - asset: fonts/Arimo-Bold.ttf
           weight: 700
   assets:
-    - img/flags/
+    - flags/
