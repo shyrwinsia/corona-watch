@@ -78,10 +78,11 @@ class Flags {
     ..putIfAbsent('Fiji', () => 'FJ')
     ..putIfAbsent('Falkland Islands (Malvinas)', () => 'FK')
     ..putIfAbsent('Micronesia', () => 'FM')
-    ..putIfAbsent('Faroe Islands', () => 'FO')
+    ..putIfAbsent('Faeroe Islands', () => 'FO')
     ..putIfAbsent('France', () => 'FR')
     ..putIfAbsent('Gabon', () => 'GA')
     ..putIfAbsent('UK', () => 'GB')
+    ..putIfAbsent('Channel Islands', () => 'GB')
     ..putIfAbsent('England', () => 'GB-ENG')
     ..putIfAbsent('Northern Ireland', () => 'GB-NIR')
     ..putIfAbsent('Scotland', () => 'GB-SCT')
@@ -224,7 +225,7 @@ class Flags {
     ..putIfAbsent('Sint Maarten', () => 'SX')
     ..putIfAbsent('Syria', () => 'SY')
     ..putIfAbsent('Eswatini', () => 'SZ')
-    ..putIfAbsent('Turks and Caicos Islands', () => 'TC')
+    ..putIfAbsent('Turks and Caicos', () => 'TC')
     ..putIfAbsent('Chad', () => 'TD')
     ..putIfAbsent('French Southern Territories', () => 'TF')
     ..putIfAbsent('Togo', () => 'TG')
@@ -270,6 +271,9 @@ class Flags {
         height: 10,
       );
     else
-      return null;
+      return SvgPicture.asset(
+        'flags/XX.svg',
+        height: 10,
+      );
   }
 }
