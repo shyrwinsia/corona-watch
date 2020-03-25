@@ -99,7 +99,7 @@ class _CountriesPageState extends State<CountriesPage> {
               children: <Widget>[
                 Flags.get(stats.country) ??
                     SizedBox(
-                      height: 10,
+                      width: 14,
                     ),
                 SizedBox(
                   width: 5,
