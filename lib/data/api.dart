@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RestApi {
-  static const HOST = '10.0.2.2:3000';
+  static const HOST = 'corona.lmao.ninja';
   static const URL_GLOBAL = 'http://$HOST/all';
   static const URL_COUNTRIES = 'http://$HOST/countries';
   static const TIMEOUT = 10; // 10s http timeout
