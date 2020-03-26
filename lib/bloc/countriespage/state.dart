@@ -12,14 +12,6 @@ class Uninitialized extends CountriesPageState {
   String toString() => '[State] CountriesPageState: Uninitialized';
 }
 
-class Loading extends CountriesPageState {
-  @override
-  List<Object> get props => null;
-
-  @override
-  String toString() => '[State] CountriesPageState: Loading';
-}
-
 class Loaded extends CountriesPageState {
   final CountryList countries;
   final SortBy sortBy;

@@ -111,7 +111,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBody(CovidStats stats) {
+  Widget _buildBody(AppModel stats) {
     return Scaffold(
       body: [
         SummaryPage(stats.globalStats),

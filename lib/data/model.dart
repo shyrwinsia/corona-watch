@@ -1,8 +1,11 @@
-class CovidStats {
+class AppModel {
   final GlobalStats globalStats;
   final CountryList countryList;
 
-  CovidStats({this.globalStats, this.countryList});
+  AppModel({
+    this.globalStats,
+    this.countryList,
+  });
 }
 
 class GlobalStats {
@@ -87,15 +90,22 @@ class Stats {
       : this.lastFetch = DateTime.now();
 }
 
+class SortParams {
+  final SortBy sortBy;
+  final OrderBy orderBy;
+
+  SortParams({this.sortBy, this.orderBy});
+}
+
 enum SortBy {
-  total,
+  totalCases,
   active,
   deaths,
-  todayActive,
-  todayDeaths,
+  newActive,
+  newDeaths,
   recovered,
   alphabetical,
 }
-enum OrderBy { desc, asc }
+enum OrderBy { highestFirst, lowestFirst }
 
 const WORLDOMETERS_URL = "https://www.worldometers.info/coronavirus/";

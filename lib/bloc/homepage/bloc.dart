@@ -27,7 +27,7 @@ class HomePageBloc extends Bloc<HomePageEvent, HomePageState> {
 
   Stream<HomePageState> _fetchGlobal() async* {
     try {
-      final CovidStats stats = await RestApi.fetch();
+      final AppModel stats = await RestApi.fetch();
       yield Loaded(stats: stats);
     } on RestApiException catch (e) {
       yield Wtf(exception: e);

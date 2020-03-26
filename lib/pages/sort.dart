@@ -1,4 +1,6 @@
 import 'package:covidwatch/components/sortdialog.dart';
+import 'package:covidwatch/data/model.dart';
+import 'package:enum_to_string/enum_to_string.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -10,10 +12,14 @@ class SortPage extends StatefulWidget {
 }
 
 class _SortPageState extends State<SortPage> {
+  SortBy _sortBy;
+  OrderBy _orderBy;
+
   @override
   void initState() {
     super.initState();
-    // laad the sort params
+    _sortBy = SortBy.totalCases;
+    _orderBy = OrderBy.highestFirst;
   }
 
   @override
@@ -49,7 +55,8 @@ class _SortPageState extends State<SortPage> {
             'Sort by',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
-          subtitle: Text('Total Cases', style: TextStyle(fontSize: 12)),
+          subtitle: Text(EnumToString.parseCamelCase(_sortBy),
+              style: TextStyle(fontSize: 12)),
           onTap: () {
             showDialog(
                 context: context,
@@ -61,7 +68,8 @@ class _SortPageState extends State<SortPage> {
             'Order by',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
           ),
-          subtitle: Text('Highest First', style: TextStyle(fontSize: 12)),
+          subtitle: Text(EnumToString.parseCamelCase(_orderBy),
+              style: TextStyle(fontSize: 12)),
           onTap: () {
             showDialog(
                 context: context,
@@ -76,6 +84,6 @@ class _SortPageState extends State<SortPage> {
 
 // TODO:
 // [ ] Create bloc for sort
-// [ ] Create dialog box for sort
+// [x] Create dialog box for sort
 // [ ] Maybe move the scroll to bloc listener?
 // [ ] Maybe no need to refresh when there is no change?

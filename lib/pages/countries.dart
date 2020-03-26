@@ -72,8 +72,6 @@ class _CountriesPageState extends State<CountriesPage> {
   Widget _buildBody(BuildContext context, CountriesPageState state) {
     if (state is Uninitialized) {
       return Container();
-    } else if (state is Loading) {
-      return _buildLoading();
     } else if (state is Loaded) {
       return _buildCountriesList(context, state.countries.list, state.sortBy);
     } else if (state is Wtf) {
@@ -98,25 +96,6 @@ class _CountriesPageState extends State<CountriesPage> {
           Divider(color: Colors.white38),
       itemBuilder: (BuildContext context, int index) =>
           _buildTile(context, list[index], sortBy),
-    );
-  }
-
-  Widget _buildLoading() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-          SizedBox(height: 24),
-          Text(
-            'Loading countries',
-            style: TextStyle(fontSize: 14, color: Colors.white),
-          ),
-        ],
-      ),
     );
   }
 
@@ -162,7 +141,7 @@ class _CountriesPageState extends State<CountriesPage> {
 
   List<Widget> _buildStats(CountryStats stats, SortBy sortBy) {
     switch (sortBy) {
-      case SortBy.total:
+      case SortBy.totalCases:
       case SortBy.alphabetical:
         return [
           _buildTotal(stats.cases),
@@ -171,7 +150,7 @@ class _CountriesPageState extends State<CountriesPage> {
           _buildRecovered(stats.recovered),
         ];
       case SortBy.active:
-      case SortBy.todayActive:
+      case SortBy.newActive:
         return [
           _buildActive(stats.active, stats.todayCases),
           _buildDeaths(stats.deaths, stats.todayDeaths),
@@ -179,7 +158,7 @@ class _CountriesPageState extends State<CountriesPage> {
           _buildTotal(stats.cases),
         ];
       case SortBy.deaths:
-      case SortBy.todayDeaths:
+      case SortBy.newDeaths:
         return [
           _buildDeaths(stats.deaths, stats.todayDeaths),
           _buildRecovered(stats.recovered),
