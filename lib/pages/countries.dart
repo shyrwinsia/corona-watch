@@ -34,7 +34,7 @@ class _CountriesPageState extends State<CountriesPage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          "COUNTRIES AND TERRITORIES",
+          "COUNTRIES",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         centerTitle: true,
@@ -97,12 +97,12 @@ class _CountriesPageState extends State<CountriesPage> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Flags.get(stats.country),
+                Flags.get(stats.iso2),
                 SizedBox(
                   width: 5,
                 ),
                 Text(
-                  stats.country,
+                  stats.country.split(',')[0],
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ],

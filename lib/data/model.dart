@@ -52,6 +52,7 @@ class CountryStats {
   final int todayDeaths;
   final int recovered;
   final int active;
+  final String iso2;
 
   CountryStats({
     this.country,
@@ -60,6 +61,7 @@ class CountryStats {
     this.todayCases = 0,
     this.todayDeaths = 0,
     this.recovered = 0,
+    this.iso2 = 'XX',
   }) : this.active = cases - deaths - recovered;
 
   factory CountryStats.fromJson(Map<String, dynamic> json) {
@@ -70,6 +72,7 @@ class CountryStats {
       todayCases: json['todayCases'],
       todayDeaths: json['todayDeaths'],
       recovered: json['recovered'],
+      iso2: json['countryInfo']['iso2'],
     );
   }
 }
