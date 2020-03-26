@@ -22,7 +22,7 @@ class GlobalGraph extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          _CustomGraph(dataMap, "Worldwide"),
+          _CustomGraph(dataMap, "Cases Worldwide"),
           Column(
             children: <Widget>[
               _StatTile(Color(0xffffffff), 'Total Cases', stats.cases),
@@ -78,7 +78,7 @@ class CountryGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _CustomGraph(dataMap, stats.country),
+        _CustomGraph(dataMap, 'Cases in ${stats.country}'),
         SizedBox(height: 24),
         _StatTile(
           Color(0xffffffff),

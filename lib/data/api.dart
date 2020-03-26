@@ -100,9 +100,10 @@ class RestApi {
   }
 
   static void _checkResponseCode(response) {
-    if (response.statusCode == 200)
+    int code = response.statusCode;
+    if (code == 200)
       return;
-    else if (response.statusCode == 429) {
+    else if (code == 429) {
       String action = response.headers['retry-after'] != null
           ? "Retry after ${response.headers['retry-after']} seconds"
           : 'Retry after a few minutes';
@@ -110,11 +111,18 @@ class RestApi {
         cause: 'Request limit reached',
         action: action,
       );
-    } else
+    } else if (code >= 500 && code < 600) {
+      // cloudfare errors usually happen
+      throw RestApiException(
+        cause: 'Error ${response.statusCode}: ${response.reasonPhrase}',
+        action: 'Please hit refresh after a few seconds',
+      );
+    } else {
       throw RestApiException(
         cause: 'Error ${response.statusCode}: ${response.reasonPhrase}',
         action: 'Please send a screenshot to developer',
       );
+    }
   }
 
   static Future _sleep(int millis) {

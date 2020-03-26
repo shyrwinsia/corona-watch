@@ -1,6 +1,6 @@
+import 'package:covidwatch/components/sortdialog.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:covidwatch/components/sortdialog.dart';
 
 import '../components/sortdialog.dart';
 

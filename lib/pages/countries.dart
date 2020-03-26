@@ -1,11 +1,12 @@
+import 'package:covidwatch/bloc/countriespage/bloc.dart';
 import 'package:covidwatch/components/countrydetail.dart';
 import 'package:covidwatch/components/error.dart';
+import 'package:covidwatch/components/flag.dart';
 import 'package:covidwatch/data/model.dart';
+import 'package:covidwatch/pages/sort.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:covidwatch/bloc/countriespage/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:covidwatch/pages/sort.dart';
 
 class CountriesPage extends StatefulWidget with ErrorMixin {
   final CountryList countries;
@@ -133,9 +134,17 @@ class _CountriesPageState extends State<CountriesPage> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text(
-              stats.country,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            Row(
+              children: <Widget>[
+                Flags.get(stats.iso2),
+                SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  stats.country,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+              ],
             ),
             SizedBox(
               height: 16,
