@@ -1,3 +1,4 @@
+import 'package:covidwatch/components/flag.dart';
 import 'package:covidwatch/components/graph.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
@@ -17,9 +18,17 @@ class CountryDetailPage extends StatelessWidget {
           icon: Icon(FeatherIcons.chevronLeft),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
-          "COVID IN " + countryStats.country.toUpperCase(),
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flags.get(countryStats.iso2, height: 14),
+            SizedBox(width: 6),
+            Text(
+              countryStats.country.toUpperCase(),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+          ],
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
