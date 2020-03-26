@@ -55,14 +55,15 @@ class CountryStats {
   final String iso2;
 
   CountryStats({
-    this.country,
+    country,
     this.cases = 0,
     this.deaths = 0,
     this.todayCases = 0,
     this.todayDeaths = 0,
     this.recovered = 0,
     this.iso2 = 'XX',
-  }) : this.active = cases - deaths - recovered;
+  })  : this.country = country.split(',')[0],
+        this.active = cases - deaths - recovered;
 
   factory CountryStats.fromJson(Map<String, dynamic> json) {
     return CountryStats(

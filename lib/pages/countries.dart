@@ -102,7 +102,7 @@ class _CountriesPageState extends State<CountriesPage> {
                   width: 5,
                 ),
                 Text(
-                  stats.country.split(',')[0],
+                  stats.country,
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
               ],
