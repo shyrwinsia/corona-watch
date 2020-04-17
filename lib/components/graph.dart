@@ -71,16 +71,16 @@ class _StatChart extends StatelessWidget {
   _StatChart(this.stats) {
     dataMap.putIfAbsent("mild", () => stats.mild.toDouble());
     dataMap.putIfAbsent("critical", () => stats.critical.toDouble());
-    dataMap.putIfAbsent("dead", () => stats.deaths.toDouble());
     dataMap.putIfAbsent("ok", () => stats.recovered.toDouble());
+    dataMap.putIfAbsent("dead", () => stats.deaths.toDouble());
   }
   @override
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         _CustomGraph(dataMap, stats.cases, stats.todayCases),
-        _StatTile(defaultColorList[0], 'Infected', stats.mild),
-        _StatTile(defaultColorList[1], 'Critical', stats.critical),
+        _StatTile(defaultColorList[0], 'Mild / Moderate', stats.mild),
+        _StatTile(defaultColorList[1], 'Severe / Critical', stats.critical),
         _StatTile(defaultColorList[2], 'Recovered', stats.recovered),
         _StatTile(defaultColorList[3], 'Dead', stats.deaths),
       ],

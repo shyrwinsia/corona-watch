@@ -10,5 +10,5 @@ const List<Color> defaultColorList = [
   Color(0xffe4b956),
   Color(0xffc45b3d),
   Color(0xff73aa50),
-  Color(0xff969696),
+  Color(0xff606060),
 ];
