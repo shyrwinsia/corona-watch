@@ -9,29 +9,6 @@ enum LegendPosition { top, bottom, left, right }
 enum ChartType { disc, ring }
 
 class PieChart extends StatefulWidget {
-  PieChart({
-    @required this.dataMap,
-    this.showChartValueLabel = false,
-    this.chartValueStyle = defaultChartValueStyle,
-    this.legendPosition = LegendPosition.right,
-    this.chartType = ChartType.disc,
-    this.chartValueBackgroundColor = Colors.grey,
-    this.legendStyle = defaultLegendStyle,
-    this.chartRadius,
-    this.animationDuration,
-    this.chartLegendSpacing = 48,
-    this.showChartValuesInPercentage = true,
-    this.showChartValues = true,
-    this.showChartValuesOutside = false,
-    this.colorList = defaultColorList,
-    this.showLegends = true,
-    this.initialAngle = 0.0,
-    this.decimalPlaces = 0,
-    this.chartTitle,
-    this.chartTitleStyle,
-    Key key,
-  }) : super(key: key);
-
   final Map<String, double> dataMap;
 
   //Chart values text styling
@@ -56,7 +33,36 @@ class PieChart extends StatefulWidget {
   final bool showLegends;
   final double initialAngle;
   final String chartTitle;
+  final String chartText;
+  final String chartSubtext;
   final TextStyle chartTitleStyle;
+  final TextStyle chartTextStyle;
+
+  PieChart({
+    @required this.dataMap,
+    this.showChartValueLabel = false,
+    this.chartValueStyle = defaultChartValueStyle,
+    this.legendPosition = LegendPosition.right,
+    this.chartType = ChartType.disc,
+    this.chartValueBackgroundColor = Colors.grey,
+    this.legendStyle = defaultLegendStyle,
+    this.chartRadius,
+    this.animationDuration,
+    this.chartLegendSpacing = 48,
+    this.showChartValuesInPercentage = true,
+    this.showChartValues = true,
+    this.showChartValuesOutside = false,
+    this.colorList = defaultColorList,
+    this.showLegends = true,
+    this.initialAngle = 0.0,
+    this.decimalPlaces = 0,
+    this.chartTitle,
+    this.chartText,
+    this.chartSubtext,
+    this.chartTitleStyle,
+    this.chartTextStyle,
+    Key key,
+  }) : super(key: key);
 
   @override
   _PieChartState createState() => _PieChartState();
@@ -157,7 +163,9 @@ class _PieChartState extends State<PieChart>
               showChartValueLabel: widget.showChartValueLabel,
               chartType: widget.chartType,
               chartTitle: widget.chartTitle,
+              chartText: widget.chartText,
               chartTitleStyle: widget.chartTitleStyle,
+              chartTextStyle: widget.chartTextStyle,
             ),
             child: AspectRatio(aspectRatio: 1),
           ),

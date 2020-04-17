@@ -7,24 +7,48 @@ class CovidStats {
 
 class GlobalStats {
   final int cases;
-  final int active;
+  final int mild;
   final int deaths;
+  final int critical;
   final int recovered;
+  final int todayDeaths;
+  final int todayCases;
+  final double casesPerMillion;
+  final double deathsPerMillion;
+  final int tests;
+  final double testsPerMillion;
+  final int affectedCountries;
   final DateTime updated;
 
   GlobalStats({
     this.cases,
     this.deaths,
+    this.critical,
     this.recovered,
+    this.todayDeaths,
+    this.todayCases,
+    this.casesPerMillion,
+    this.deathsPerMillion,
+    this.tests,
+    this.testsPerMillion,
+    this.affectedCountries,
     updated,
-  })  : this.active = cases - deaths - recovered,
+  })  : this.mild = cases - deaths - recovered - critical,
         this.updated = DateTime.fromMillisecondsSinceEpoch(updated);
 
   factory GlobalStats.fromJson(Map<String, dynamic> json) {
     return GlobalStats(
       cases: json['cases'],
       deaths: json['deaths'],
+      critical: json['critical'],
       recovered: json['recovered'],
+      todayDeaths: json['todayDeaths'],
+      todayCases: json['todayCases'],
+      casesPerMillion: json['casesPerOneMillion'].toDouble(),
+      deathsPerMillion: json['deathsPerOneMillion'].toDouble(),
+      tests: json['tests'],
+      testsPerMillion: json['testsPerOneMillion'].toDouble(),
+      affectedCountries: json['affectedCountries'],
       updated: json['updated'],
     );
   }

@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,9 @@ class PieChartPainter extends CustomPainter {
   final bool showChartValueLabel;
   final ChartType chartType;
   final String chartTitle;
+  final String chartText;
   final TextStyle chartTitleStyle;
+  final TextStyle chartTextStyle;
 
   double _prevAngle = 0;
 
@@ -36,7 +39,9 @@ class PieChartPainter extends CustomPainter {
     this.showChartValueLabel,
     this.chartType,
     this.chartTitle,
+    this.chartText,
     this.chartTitleStyle,
+    this.chartTextStyle,
   }) {
     for (int i = 0; i < values.length; i++) {
       final paint = Paint()..color = _getColor(colorList, i);
@@ -66,16 +71,11 @@ class PieChartPainter extends CustomPainter {
         _paintList[i],
       );
       final radius = showChartValuesOutside ? side * 0.52 : side / 3;
-      // number of pixels to shift if labels do clutter (if the percentage < 3%)
-      final margin =
-          (!_subParts.contains(0) && (_subParts.elementAt(i) / _total) < 0.03
-                  ? 13
-                  : 0) *
-              marginSide;
+
       final x = (radius) *
               math.cos(_prevAngle +
                   ((((_totalAngle) / _total) * _subParts[i]) / 2)) +
-          margin;
+          marginSide;
       final y = (radius) *
           math.sin(
               _prevAngle + ((((_totalAngle) / _total) * _subParts[i]) / 2));
@@ -86,30 +86,47 @@ class PieChartPainter extends CustomPainter {
                 '%')
             : _subParts.elementAt(i).toStringAsFixed(this.decimalPlaces);
 
-        _drawName(canvas, name, x, y, side);
+        // if the value is too small, don't paint it
+        if (_subParts.elementAt(i) / _total > 0.01)
+          _drawValue(canvas, name, x, y, side);
+
         marginSide *=
             -1; // switch the margin side for the next label to avoid shifting in the same direction
       }
       _prevAngle = _prevAngle + (((_totalAngle) / _total) * _subParts[i]);
     }
 
-    TextSpan span = TextSpan(
-      style: this.chartTitleStyle,
-      text: this.chartTitle,
-    );
-    TextPainter tp = TextPainter(
-      text: span,
+    TextPainter title = TextPainter(
+      text: TextSpan(
+        style: this.chartTitleStyle,
+        text: this.chartTitle,
+      ),
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
     );
-    tp.layout();
-
-    //Finally paint the text above box
-    tp.paint(
+    title.layout();
+    title.paint(
       canvas,
       Offset(
-        (side / 2) - (tp.width / 2),
-        (side / 2) - (tp.height / 2),
+        (side / 2) - (title.width / 2),
+        (side / 2) - (title.height / 2) - 10,
+      ),
+    );
+
+    TextPainter text = TextPainter(
+      text: TextSpan(
+        style: this.chartTextStyle,
+        text: this.chartText,
+      ),
+      textAlign: TextAlign.center,
+      textDirection: TextDirection.ltr,
+    );
+    text.layout();
+    text.paint(
+      canvas,
+      Offset(
+        (side / 2) - (text.width / 2),
+        (side / 2) - (text.height / 2) + 10,
       ),
     );
   }
@@ -122,7 +139,7 @@ class PieChartPainter extends CustomPainter {
       return colorList.elementAt(index);
   }
 
-  void _drawName(Canvas canvas, String name, double x, double y, double side) {
+  void _drawValue(Canvas canvas, String name, double x, double y, double side) {
     TextSpan span = TextSpan(
       style: chartValueStyle,
       text: name,
@@ -134,7 +151,6 @@ class PieChartPainter extends CustomPainter {
     );
     tp.layout();
 
-    //Finally paint the text above box
     tp.paint(
       canvas,
       Offset(
