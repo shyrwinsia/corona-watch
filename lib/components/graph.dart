@@ -19,7 +19,19 @@ class GlobalGraph extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           _StatChart(stats),
+          SizedBox(height: 8),
+          Divider(
+            color: Colors.white.withOpacity(0.4),
+          ),
+          SizedBox(height: 8),
+          _StatCard(title: 'New Cases', value: stats.todayCases),
+          _StatCard(title: 'New Deaths', value: stats.todayDeaths),
+          _StatCard(title: 'Cases per million', value: stats.casesPerMillion),
+          _StatCard(title: 'Deaths per million', value: stats.deathsPerMillion),
+          _StatCard(title: 'Tests per million', value: stats.testsPerMillion),
           _StatCard(title: 'Tests Conducted', value: stats.tests),
+          _StatCard(
+              title: 'Affected Countries', value: stats.affectedCountries),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,11 +79,10 @@ class _StatChart extends StatelessWidget {
     return Column(
       children: <Widget>[
         _CustomGraph(dataMap, stats.cases, stats.todayCases),
-        SizedBox(height: 16),
         _StatTile(defaultColorList[0], 'Mild', stats.mild),
         _StatTile(defaultColorList[1], 'Critical', stats.critical),
         _StatTile(defaultColorList[2], 'Recovered', stats.recovered),
-        _StatTile(defaultColorList[3], 'Deaths', stats.deaths),
+        _StatTile(defaultColorList[3], 'Dead', stats.deaths),
       ],
     );
   }
@@ -119,7 +130,7 @@ class _CustomGraph extends StatelessWidget {
           );
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 24, 0, 8),
+      padding: EdgeInsets.fromLTRB(0, 24, 0, 16),
       child: PieChart(
           dataMap: dataMap,
           animationDuration: Duration(milliseconds: 800),
@@ -157,12 +168,7 @@ class _StatTile extends StatelessWidget {
     Function mathFunc = (Match match) => '${match[1]},';
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(width: 1.0, color: Colors.white24),
-        ),
-      ),
+      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -195,13 +201,34 @@ class _StatTile extends StatelessWidget {
 
 class _StatCard extends StatelessWidget {
   final String title;
-  final int value;
+  final num value;
 
   _StatCard({this.title, this.value});
 
   @override
   Widget build(BuildContext context) {
-    return Text(this.title);
+    RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    Function mathFunc = (Match match) => '${match[1]},';
+
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            this.title,
+            style:
+                TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.6)),
+          ),
+          Text(
+            value.toString().replaceAllMapped(reg, mathFunc),
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+        ],
+      ),
+    );
   }
 }
 

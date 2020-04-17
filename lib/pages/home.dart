@@ -55,15 +55,6 @@ class _HomePageState extends State<HomePage> {
   Widget _buildLoading() {
     return Scaffold(
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text(
-          "COVID WATCH",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -93,10 +84,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(
-          "COVID WATCH",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
@@ -114,7 +101,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBody(CovidStats stats) {
     return Scaffold(
       body: [
-        SummaryPage(stats.globalStats),
+        SummaryPage(stats.globalStats, _bloc),
         CountriesPage(stats.countryList),
         DummyPage(),
         DummyPage(),

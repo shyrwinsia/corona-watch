@@ -14,7 +14,7 @@ class RestApi {
   static const TIMEOUT = 10; // 10s http timeout
   static const SLEEP = 1000; // 1s sleep to prevent rate-limiting
   static const TIME_UNTIL_NEXT_FETCH = 60000; // 60s caching
-  static const FAKE_FETCH_TIME = 0; // 1.985s of fake loading
+  static const FAKE_FETCH_TIME = 1985; // 1.985s of fake loading
 
   static Future<CovidStats> fetch() async {
     if (await _shouldFetch()) {
