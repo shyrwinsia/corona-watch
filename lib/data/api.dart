@@ -8,13 +8,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RestApi {
-  // static const HOST = 'corona.lmao.ninja';
-  static const HOST = '10.0.2.2:3000';
+  static const HOST = 'corona.lmao.ninja';
+  // static const HOST = '10.0.2.2:3000';
   static const URL_GLOBAL = 'http://$HOST/v2/all';
   static const URL_COUNTRIES = 'http://$HOST/v2/countries';
   static const TIMEOUT = 10; // 10s http timeout
   static const SLEEP = 1000; // 1s sleep to prevent rate-limiting
-  static const TIME_UNTIL_NEXT_FETCH = 0; // 60s caching
+  static const TIME_UNTIL_NEXT_FETCH = 60000; // 60s caching
   static const FAKE_FETCH_TIME = 1985; // 1.985s of fake loading
 
   static Future<CovidStats> fetch() async {
