@@ -109,7 +109,7 @@ class PieChartPainter extends CustomPainter {
       canvas,
       Offset(
         (side / 2) - (title.width / 2),
-        (side / 2) - (title.height / 2) - 10,
+        (side / 2) - (title.height / 2) - 6,
       ),
     );
 
@@ -126,7 +126,7 @@ class PieChartPainter extends CustomPainter {
       canvas,
       Offset(
         (side / 2) - (text.width / 2),
-        (side / 2) - (text.height / 2) + 10,
+        (side / 2) - (text.height / 2) + 16,
       ),
     );
   }
@@ -154,8 +154,8 @@ class PieChartPainter extends CustomPainter {
     tp.paint(
       canvas,
       Offset(
-        (side / 2 + x / 0.84) - (tp.width / 2),
-        (side / 2 + y / 0.84) - (tp.height / 2),
+        (side / 2 + x / 0.865) - (tp.width / 2),
+        (side / 2 + y / 0.865) - (tp.height / 2),
       ),
     );
   }

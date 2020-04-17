@@ -39,14 +39,14 @@ class GlobalGraph extends StatelessWidget {
               Text(
                 'Last update ${timeago.format((stats.updated))}',
                 style: TextStyle(
-                    color: Colors.white.withOpacity(0.4), fontSize: 10),
+                    color: Colors.white.withOpacity(0.6), fontSize: 10),
               ),
               FlatButton(
                 padding: EdgeInsets.all(0),
                 child: Text(
                   'Visit worldometers.info',
                   style: TextStyle(
-                      color: Color(0xff8fa7f4).withOpacity(0.6), fontSize: 10),
+                      color: Color(0xff8fa7f4).withOpacity(0.8), fontSize: 10),
                 ),
                 onPressed: () async {
                   if (await canLaunch(WORLDOMETERS_URL)) {
@@ -79,7 +79,7 @@ class _StatChart extends StatelessWidget {
     return Column(
       children: <Widget>[
         _CustomGraph(dataMap, stats.cases, stats.todayCases),
-        _StatTile(defaultColorList[0], 'Mild', stats.mild),
+        _StatTile(defaultColorList[0], 'Infected', stats.mild),
         _StatTile(defaultColorList[1], 'Critical', stats.critical),
         _StatTile(defaultColorList[2], 'Recovered', stats.recovered),
         _StatTile(defaultColorList[3], 'Dead', stats.deaths),
@@ -108,25 +108,24 @@ class _CustomGraph extends StatelessWidget {
     double fontSize = MediaQuery.of(context).size.aspectRatio > 0.6 ? 10 : 12;
     TextStyle chartTitleStyle = MediaQuery.of(context).size.aspectRatio > 0.6
         ? TextStyle(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 12,
+            fontSize: 20,
           )
         : TextStyle(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 16,
+            fontSize: 24,
           );
 
     TextStyle chartTextStyle = MediaQuery.of(context).size.aspectRatio > 0.6
         ? TextStyle(
-            color: Colors.white.withOpacity(0.6),
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 10,
           )
         : TextStyle(
-            color: Colors.white.withOpacity(0.6),
-            fontSize: 14,
+            color: Colors.white.withOpacity(0.8),
+            fontSize: 12,
           );
 
     return Padding(
@@ -141,15 +140,15 @@ class _CustomGraph extends StatelessWidget {
           showLegends: false,
           decimalPlaces: 1,
           showChartValueLabel: true,
-          initialAngle: 8,
+          initialAngle: 1.1,
           chartType: ChartType.ring,
           chartValueStyle: TextStyle(
-            color: Colors.white.withOpacity(0.6),
+            color: Colors.white.withOpacity(0.8),
             fontSize: fontSize,
           ),
-          chartTitle: "Cases Worldwide",
+          chartTitle: this.cases.toString().replaceAllMapped(reg, mathFunc),
           chartTitleStyle: chartTitleStyle,
-          chartText: this.cases.toString().replaceAllMapped(reg, mathFunc),
+          chartText: "Cases Worldwide",
           chartTextStyle: chartTextStyle),
     );
   }
@@ -184,7 +183,7 @@ class _StatTile extends StatelessWidget {
               Text(
                 label,
                 style: TextStyle(
-                    fontSize: 14, color: Colors.white.withOpacity(0.6)),
+                    fontSize: 14, color: Colors.white.withOpacity(0.8)),
               ),
             ],
           ),
@@ -219,7 +218,7 @@ class _StatCard extends StatelessWidget {
           Text(
             this.title,
             style:
-                TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.6)),
+                TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.8)),
           ),
           Text(
             value.toString().replaceAllMapped(reg, mathFunc),
