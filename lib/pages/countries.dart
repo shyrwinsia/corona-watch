@@ -226,9 +226,6 @@ class _CountriesPageState extends State<CountriesPage> {
   }
 
   Widget _buildStat(CountryStats stats) {
-    RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-    Function mathFunc = (Match match) => '${match[1]},';
-
     String stat;
 
     if (_sortBy == 0)
