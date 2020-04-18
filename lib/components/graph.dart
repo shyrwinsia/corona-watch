@@ -78,7 +78,38 @@ class _StatChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        _CustomGraph(dataMap, stats.cases, stats.todayCases),
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 24, 0, 24),
+          child: _CustomGraph(dataMap, stats.cases),
+        ),
+        _StatTile(defaultColorList[0], 'Mild / Moderate', stats.mild),
+        _StatTile(defaultColorList[1], 'Severe / Critical', stats.critical),
+        _StatTile(defaultColorList[2], 'Recovered', stats.recovered),
+        _StatTile(defaultColorList[3], 'Deaths', stats.deaths),
+      ],
+    );
+  }
+}
+
+class _CountryChart extends StatelessWidget {
+  final Map<String, double> dataMap = Map();
+  final CountryStats stats;
+
+  _CountryChart(this.stats) {
+    dataMap.putIfAbsent("mild", () => stats.mild.toDouble());
+    dataMap.putIfAbsent("critical", () => stats.critical.toDouble());
+    dataMap.putIfAbsent("ok", () => stats.recovered.toDouble());
+    dataMap.putIfAbsent("dead", () => stats.deaths.toDouble());
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 24, 0, 24),
+          child: _CustomGraph(dataMap, stats.cases),
+        ),
         _StatTile(defaultColorList[0], 'Mild / Moderate', stats.mild),
         _StatTile(defaultColorList[1], 'Severe / Critical', stats.critical),
         _StatTile(defaultColorList[2], 'Recovered', stats.recovered),
@@ -91,12 +122,10 @@ class _StatChart extends StatelessWidget {
 class _CustomGraph extends StatelessWidget {
   final Map<String, double> dataMap;
   final int cases;
-  final int plus;
 
   _CustomGraph(
     this.dataMap,
     this.cases,
-    this.plus,
   );
 
   @override
@@ -128,29 +157,26 @@ class _CustomGraph extends StatelessWidget {
             fontSize: 12,
           );
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, 24, 0, 16),
-      child: PieChart(
-          dataMap: dataMap,
-          animationDuration: Duration(milliseconds: 800),
-          chartRadius: MediaQuery.of(context).size.width * chartRadiusFactor,
-          showChartValuesInPercentage: true,
-          showChartValues: false,
-          showChartValuesOutside: true,
-          showLegends: false,
-          decimalPlaces: 1,
-          showChartValueLabel: true,
-          initialAngle: 1.1,
-          chartType: ChartType.ring,
-          chartValueStyle: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: fontSize,
-          ),
-          chartTitle: this.cases.toString().replaceAllMapped(reg, mathFunc),
-          chartTitleStyle: chartTitleStyle,
-          chartText: "Cases Worldwide",
-          chartTextStyle: chartTextStyle),
-    );
+    return PieChart(
+        dataMap: dataMap,
+        animationDuration: Duration(milliseconds: 800),
+        chartRadius: MediaQuery.of(context).size.width * chartRadiusFactor,
+        showChartValuesInPercentage: true,
+        showChartValues: false,
+        showChartValuesOutside: true,
+        showLegends: false,
+        decimalPlaces: 1,
+        showChartValueLabel: true,
+        initialAngle: 1.1,
+        chartType: ChartType.ring,
+        chartValueStyle: TextStyle(
+          color: Colors.white.withOpacity(0.8),
+          fontSize: fontSize,
+        ),
+        chartTitle: this.cases.toString().replaceAllMapped(reg, mathFunc),
+        chartTitleStyle: chartTitleStyle,
+        chartText: "Cases Worldwide",
+        chartTextStyle: chartTextStyle);
   }
 }
 
@@ -239,29 +265,25 @@ class CountryGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _StatTile(
-          Color(0xffffffff),
-          'Total Cases',
-          stats.cases,
-        ),
-        _StatTile(
-          Color(0xfff5c76a),
-          'Mild',
-          stats.mild,
-        ),
-        _StatTile(
-          Color(0xffff653b),
-          'Deaths',
-          stats.deaths,
-        ),
-        _StatTile(
-          Color(0xff9ff794),
-          'Recovered',
-          stats.recovered,
-        )
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _CountryChart(stats),
+          SizedBox(height: 8),
+          Divider(
+            color: Colors.white.withOpacity(0.4),
+          ),
+          SizedBox(height: 8),
+          _StatCard(title: 'New cases', value: stats.todayCases),
+          _StatCard(title: 'New deaths', value: stats.todayDeaths),
+          _StatCard(title: 'Cases per million', value: stats.casesPerMillion),
+          _StatCard(title: 'Deaths per million', value: stats.deathsPerMillion),
+          _StatCard(title: 'Tests per million', value: stats.testsPerMillion),
+          _StatCard(title: 'Tests conducted', value: stats.tests),
+        ],
+      ),
     );
   }
 }
