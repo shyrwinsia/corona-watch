@@ -80,7 +80,7 @@ class _StatChart extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: EdgeInsets.fromLTRB(0, 24, 0, 24),
-          child: _CustomGraph(dataMap, stats.cases),
+          child: _CustomGraph(dataMap, stats.cases, "Cases Worldwide"),
         ),
         _StatTile(defaultColorList[0], 'Mild / Moderate', stats.mild),
         _StatTile(defaultColorList[1], 'Severe / Critical', stats.critical),
@@ -108,7 +108,8 @@ class _CountryChart extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: EdgeInsets.fromLTRB(0, 24, 0, 24),
-          child: _CustomGraph(dataMap, stats.cases),
+          child:
+              _CustomGraph(dataMap, stats.cases, "Cases in ${stats.country}"),
         ),
         _StatTile(defaultColorList[0], 'Mild / Moderate', stats.mild),
         _StatTile(defaultColorList[1], 'Severe / Critical', stats.critical),
@@ -122,10 +123,12 @@ class _CountryChart extends StatelessWidget {
 class _CustomGraph extends StatelessWidget {
   final Map<String, double> dataMap;
   final int cases;
+  final String text;
 
   _CustomGraph(
     this.dataMap,
     this.cases,
+    this.text,
   );
 
   @override
@@ -175,7 +178,7 @@ class _CustomGraph extends StatelessWidget {
         ),
         chartTitle: this.cases.toString().replaceAllMapped(reg, mathFunc),
         chartTitleStyle: chartTitleStyle,
-        chartText: "Cases Worldwide",
+        chartText: text,
         chartTextStyle: chartTextStyle);
   }
 }
