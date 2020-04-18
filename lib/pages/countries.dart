@@ -3,13 +3,26 @@ import 'package:covidwatch/components/countrydetail.dart';
 import 'package:covidwatch/components/error.dart';
 import 'package:covidwatch/components/flag.dart';
 import 'package:covidwatch/data/model.dart';
-import 'package:covidwatch/pages/sort.dart';
-import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CountriesPage extends StatefulWidget with ErrorMixin {
   final CountryList countries;
+  final List<String> sortLabels = [
+    'Total cases',
+    'Mild / Moderate',
+    'Severe / Critical',
+    'Recovered',
+    'Dead',
+    'New cases',
+    'New deaths',
+    'Cases per million',
+    'Deaths per million',
+    'Tests per million',
+    'Tests conducted',
+    'Alphabetical',
+  ];
 
   CountriesPage(this.countries);
   @override
@@ -17,7 +30,7 @@ class CountriesPage extends StatefulWidget with ErrorMixin {
 }
 
 class _CountriesPageState extends State<CountriesPage> {
-  final ScrollController _scroller = ScrollController();
+  int index = 0;
   CountriesPageBloc _bloc;
 
   @override
@@ -33,38 +46,74 @@ class _CountriesPageState extends State<CountriesPage> {
       bloc: _bloc,
       builder: (context, state) {
         return Scaffold(
-          backgroundColor: Colors.black,
-          appBar: AppBar(
-            leading: IconButton(
-              icon: Icon(FeatherIcons.chevronLeft),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            title: Text(
-              "COUNTRIES",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            centerTitle: true,
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            actions: <Widget>[
-              FlatButton(
-                child: Text('Sort'),
-                onPressed: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SortPage()),
-                ).then(
-                  (value) {
-                    _bloc.add(LoadCountryList(countries: widget.countries));
-                    _scroller.animateTo(0,
-                        duration: Duration(milliseconds: 2000),
-                        curve: Curves.fastLinearToSlowEaseIn);
-                  },
+            backgroundColor: Colors.black,
+            appBar: AppBar(
+              title: Text(
+                "COUNTRIES",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              centerTitle: true,
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(48),
+                child: SizedBox(
+                  height: 48,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(24, 0, 24, 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          'Country / Territory',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          'Total Cases',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ],
-          ),
-          body: _buildBody(context, state),
-        );
+            ),
+            body: Stack(
+              alignment: AlignmentDirectional.bottomStart,
+              children: <Widget>[
+                _buildBody(context, state),
+                Container(
+                  height: 40,
+                  color: Colors.black,
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.sortLabels.length,
+                    itemBuilder: (BuildContext context, int index) =>
+                        FlatButton(
+                      child: Text(this.widget.sortLabels[index],
+                          style: this.index == index
+                              ? TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xff8fa7f4),
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withOpacity(0.6))),
+                      onPressed: () {
+                        _bloc.add(LoadCountryList(countries: widget.countries));
+                        setState(() {
+                          this.index = index;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ));
       },
     );
   }
@@ -90,7 +139,6 @@ class _CountriesPageState extends State<CountriesPage> {
   Widget _buildCountriesList(BuildContext context, List list, SortBy sortBy) {
     return ListView.separated(
       padding: EdgeInsets.symmetric(horizontal: 16),
-      controller: _scroller,
       itemCount: list.length,
       separatorBuilder: (BuildContext context, int index) =>
           Divider(color: Colors.white38),
@@ -100,6 +148,9 @@ class _CountriesPageState extends State<CountriesPage> {
   }
 
   Widget _buildTile(BuildContext context, CountryStats stats, SortBy sortBy) {
+    RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
+    Function mathFunc = (Match match) => '${match[1]},';
+
     return InkWell(
       onTap: () => Navigator.push(
         context,
@@ -108,138 +159,56 @@ class _CountriesPageState extends State<CountriesPage> {
         ),
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
               children: <Widget>[
                 Flags.get(stats.iso2),
                 SizedBox(
-                  width: 5,
+                  width: 8,
                 ),
                 Text(
                   stats.country,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: TextStyle(fontSize: 14),
                 ),
               ],
             ),
-            SizedBox(
-              height: 16,
+            Text(
+              stats.cases.toString().replaceAllMapped(reg, mathFunc),
+              style: TextStyle(fontSize: 16, color: Colors.white),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: _buildStats(stats, sortBy),
-            )
           ],
         ),
       ),
     );
   }
-
-  List<Widget> _buildStats(CountryStats stats, SortBy sortBy) {
-    switch (sortBy) {
-      case SortBy.totalCases:
-      case SortBy.alphabetical:
-        return [
-          _buildTotal(stats.cases),
-          _buildActive(stats.active, stats.todayCases),
-          _buildDeaths(stats.deaths, stats.todayDeaths),
-          _buildRecovered(stats.recovered),
-        ];
-      case SortBy.active:
-      case SortBy.newActive:
-        return [
-          _buildActive(stats.active, stats.todayCases),
-          _buildDeaths(stats.deaths, stats.todayDeaths),
-          _buildRecovered(stats.recovered),
-          _buildTotal(stats.cases),
-        ];
-      case SortBy.deaths:
-      case SortBy.newDeaths:
-        return [
-          _buildDeaths(stats.deaths, stats.todayDeaths),
-          _buildRecovered(stats.recovered),
-          _buildActive(stats.active, stats.todayCases),
-          _buildTotal(stats.cases),
-        ];
-      case SortBy.recovered:
-        return [
-          _buildRecovered(stats.recovered),
-          _buildActive(stats.active, stats.todayCases),
-          _buildDeaths(stats.deaths, stats.todayDeaths),
-          _buildTotal(stats.cases),
-        ];
-      default:
-        return [];
-    }
-  }
-
-  Widget _buildStat(String label, int base, int increase, Color color) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        (increase != 0)
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: <Widget>[
-                  Text(
-                    _convert(base),
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                  SizedBox(width: 2),
-                  Icon(
-                    FeatherIcons.arrowUp,
-                    size: 10,
-                  ),
-                  Text(
-                    "${_convert(increase)}",
-                    style: TextStyle(fontSize: 10, color: Colors.white),
-                  ),
-                ],
-              )
-            : Text(
-                _convert(base),
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-        Text(
-          label,
-          style: TextStyle(fontSize: 10, color: color),
-        ),
-      ],
-    );
-  }
-
-  String _convert(int num) {
-    RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
-    Function mathFunc = (Match match) => '${match[1]},';
-    return num.toString().replaceAllMapped(reg, mathFunc);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _scroller.dispose();
-  }
-
-  Widget _buildTotal(cases) =>
-      _buildStat('Total Cases', cases, 0, Colors.white.withOpacity(0.8));
-
-  Widget _buildActive(active, todayCases) => _buildStat(
-      'Active', active, todayCases, Color(0xfff5c76a).withOpacity(0.8));
-
-  Widget _buildDeaths(deaths, todayDeaths) => _buildStat(
-      'Deaths', deaths, todayDeaths, Color(0xffff653b).withOpacity(0.8));
-
-  Widget _buildRecovered(recovered) =>
-      _buildStat('Recovered', recovered, 0, Color(0xff9ff794).withOpacity(0.8));
 }
 
-// TODO
-// - idea: move the sort params to root and just let it be propagated?
-// - sort the main list? so there is no flicker when loading?
+//  ListView.builder(
+//   physics: ClampingScrollPhysics(),
+//   shrinkWrap: true,
+//   scrollDirection: Axis.horizontal,
+//   itemCount: widget.sortLabels.length,
+//   itemBuilder: (BuildContext context, int index) =>
+//       FlatButton(
+//     child: Text(this.widget.sortLabels[index],
+//         style: this.index == index
+//             ? TextStyle(
+//                 fontSize: 12,
+//                 color: Color(0xff8fa7f4),
+//                 fontWeight: FontWeight.bold,
+//               )
+//             : TextStyle(
+//                 fontSize: 12,
+//                 color: Colors.white.withOpacity(0.6))),
+//     onPressed: () {
+//       _bloc.add(LoadCountryList(countries: widget.countries));
+//       setState(() {
+//         this.index = index;
+//       });
+//     },
+//   ),
+// ),

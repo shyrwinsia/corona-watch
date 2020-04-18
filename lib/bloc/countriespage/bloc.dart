@@ -5,7 +5,6 @@ import 'package:covidwatch/data/api.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:covidwatch/logger/logger.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 part 'event.dart';
 part 'state.dart';
@@ -20,19 +19,20 @@ class CountriesPageBloc extends Bloc<CountriesPageEvent, CountriesPageState> {
   ) async* {
     if (event is LoadCountryList) {
       // load the params from sharepref
-      SharedPreferences pref = await SharedPreferences.getInstance();
-      int sortByIndex = pref.getInt('sortBy') ?? 0;
-      int orderByIndex = pref.getInt('orderBy') ?? 0;
+      // SharedPreferences pref = await SharedPreferences.getInstance();
+      // int sortByIndex = pref.getInt('sortBy') ?? 0;
+      // int orderByIndex = pref.getInt('orderBy') ?? 0;
 
-      sort(
-        event.countries.list,
-        SortBy.values[sortByIndex],
-        OrderBy.values[orderByIndex],
-      );
+      // sort(
+      //   event.countries.list,
+      //   SortBy.values[sortByIndex],
+      //   OrderBy.values[orderByIndex],
+      // );
 
       yield Loaded(
         countries: event.countries,
-        sortBy: SortBy.values[sortByIndex],
+        sortBy: SortBy.active,
+        // sortBy: SortBy.values[sortByIndex],
       );
     } else {
       getLogger().wtf('Something went wrong.');
