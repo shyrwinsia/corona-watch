@@ -24,14 +24,14 @@ class GlobalGraph extends StatelessWidget {
             color: Colors.white.withOpacity(0.4),
           ),
           SizedBox(height: 8),
-          _StatCard(title: 'New Cases', value: stats.todayCases),
-          _StatCard(title: 'New Deaths', value: stats.todayDeaths),
+          _StatCard(title: 'New cases', value: stats.todayCases),
+          _StatCard(title: 'New deaths', value: stats.todayDeaths),
           _StatCard(title: 'Cases per million', value: stats.casesPerMillion),
           _StatCard(title: 'Deaths per million', value: stats.deathsPerMillion),
           _StatCard(title: 'Tests per million', value: stats.testsPerMillion),
-          _StatCard(title: 'Tests Conducted', value: stats.tests),
+          _StatCard(title: 'Tests conducted', value: stats.tests),
           _StatCard(
-              title: 'Affected Countries', value: stats.affectedCountries),
+              title: 'Affected countries', value: stats.affectedCountries),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +82,7 @@ class _StatChart extends StatelessWidget {
         _StatTile(defaultColorList[0], 'Mild / Moderate', stats.mild),
         _StatTile(defaultColorList[1], 'Severe / Critical', stats.critical),
         _StatTile(defaultColorList[2], 'Recovered', stats.recovered),
-        _StatTile(defaultColorList[3], 'Dead', stats.deaths),
+        _StatTile(defaultColorList[3], 'Deaths', stats.deaths),
       ],
     );
   }
@@ -248,8 +248,8 @@ class CountryGraph extends StatelessWidget {
         ),
         _StatTile(
           Color(0xfff5c76a),
-          'Active',
-          stats.active,
+          'Mild',
+          stats.mild,
         ),
         _StatTile(
           Color(0xffff653b),

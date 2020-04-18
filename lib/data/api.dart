@@ -17,7 +17,7 @@ class RestApi {
   static const TIME_UNTIL_NEXT_FETCH = 60000; // 60s caching
   static const FAKE_FETCH_TIME = 1985; // 1.985s of fake loading
 
-  static Future<CovidStats> fetch() async {
+  static Future<AppModel> fetch() async {
     if (await _shouldFetch()) {
       try {
         final responseGlobal =
@@ -38,7 +38,7 @@ class RestApi {
         await _writeToFile('global', responseGlobal.body);
         await _writeToFile('countries', responseCountries.body);
 
-        return CovidStats(
+        return AppModel(
           globalStats: GlobalStats.fromJson(
             json.decode(responseGlobal.body),
           ),
@@ -64,7 +64,7 @@ class RestApi {
       // it feel like its fetching for user experience
       await _sleep(FAKE_FETCH_TIME);
 
-      return CovidStats(
+      return AppModel(
         globalStats: GlobalStats.fromJson(
           json.decode(await _readFromFile('global')),
         ),

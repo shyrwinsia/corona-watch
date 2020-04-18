@@ -21,7 +21,7 @@ class Loading extends HomePageState {
 }
 
 class Loaded extends HomePageState {
-  final CovidStats stats;
+  final AppModel stats;
 
   Loaded({this.stats});
 

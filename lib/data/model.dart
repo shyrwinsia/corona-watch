@@ -1,8 +1,11 @@
-class CovidStats {
+class AppModel {
   final GlobalStats globalStats;
   final CountryList countryList;
 
-  CovidStats({this.globalStats, this.countryList});
+  AppModel({
+    this.globalStats,
+    this.countryList,
+  });
 }
 
 class GlobalStats {
@@ -71,11 +74,16 @@ class CountryList {
 class CountryStats {
   final String country;
   final int cases;
+  final int mild;
   final int deaths;
-  final int todayCases;
-  final int todayDeaths;
+  final int critical;
   final int recovered;
-  final int active;
+  final int todayDeaths;
+  final int todayCases;
+  final double casesPerMillion;
+  final double deathsPerMillion;
+  final int tests;
+  final double testsPerMillion;
   final String iso2;
 
   CountryStats({
@@ -86,17 +94,27 @@ class CountryStats {
     this.todayDeaths = 0,
     this.recovered = 0,
     this.iso2 = 'XX',
+    this.critical,
+    this.casesPerMillion,
+    this.deathsPerMillion,
+    this.tests,
+    this.testsPerMillion,
   })  : this.country = country.split(',')[0],
-        this.active = cases - deaths - recovered;
+        this.mild = cases - deaths - recovered;
 
   factory CountryStats.fromJson(Map<String, dynamic> json) {
     return CountryStats(
       country: json['country'],
       cases: json['cases'],
       deaths: json['deaths'],
-      todayCases: json['todayCases'],
-      todayDeaths: json['todayDeaths'],
+      critical: json['critical'],
       recovered: json['recovered'],
+      todayDeaths: json['todayDeaths'],
+      todayCases: json['todayCases'],
+      casesPerMillion: json['casesPerOneMillion'].toDouble(),
+      deathsPerMillion: json['deathsPerOneMillion'].toDouble(),
+      tests: json['tests'],
+      testsPerMillion: json['testsPerOneMillion'].toDouble(),
       iso2: json['countryInfo']['iso2'],
     );
   }
@@ -110,5 +128,28 @@ class Stats {
   Stats({this.globalStats, this.countryStats})
       : this.lastFetch = DateTime.now();
 }
+
+class SortParams {
+  final SortBy sortBy;
+  final OrderBy orderBy;
+
+  SortParams({this.sortBy, this.orderBy});
+}
+
+enum SortBy {
+  totalCases,
+  mild,
+  critical,
+  recovered,
+  deaths,
+  newCases,
+  newDeaths,
+  casesPerMillion,
+  deathsPerMillion,
+  testsPerMillion,
+  tests,
+  alphabetical,
+}
+enum OrderBy { highestFirst, lowestFirst }
 
 const WORLDOMETERS_URL = "https://www.worldometers.info/coronavirus/";

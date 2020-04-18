@@ -101,7 +101,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBody(CovidStats stats) {
+  Widget _buildBody(AppModel stats) {
     return Scaffold(
       body: [
         SummaryPage(stats.globalStats, _bloc),
@@ -114,7 +114,7 @@ class _HomePageState extends State<HomePage> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.black,
         selectedItemColor: Color(0xff8fa7f4),
-        unselectedItemColor: Colors.white.withOpacity(0.4),
+        unselectedItemColor: Colors.white.withOpacity(0.6),
         onTap: (int index) {
           setState(() {
             _currentIndex = index;

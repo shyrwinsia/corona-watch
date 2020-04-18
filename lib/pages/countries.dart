@@ -1,87 +1,199 @@
+import 'package:covidwatch/bloc/countriespage/bloc.dart';
 import 'package:covidwatch/components/countrydetail.dart';
-import 'package:covidwatch/components/sort.dart';
+import 'package:covidwatch/components/error.dart';
+import 'package:covidwatch/components/flag.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../components/flag.dart';
+class CountriesPage extends StatefulWidget with ErrorMixin {
+  final CountryList countries;
+  final List<String> sortLabels = [
+    'Total cases',
+    'Mild / Moderate',
+    'Severe / Critical',
+    'Recovered',
+    'Deaths',
+    'New cases',
+    'New deaths',
+    'Cases per million',
+    'Deaths per million',
+    'Tests per million',
+    'Tests conducted',
+    'Alphabetical',
+  ];
 
-class CountriesPage extends StatefulWidget {
-  final CountryList stats;
-
-  CountriesPage(this.stats);
+  CountriesPage(this.countries);
   @override
   State<StatefulWidget> createState() => _CountriesPageState();
 }
 
 class _CountriesPageState extends State<CountriesPage> {
-  List<CountryStats> _current;
-
-  SortBy _sortBy = SortBy.alphabetical;
-  OrderBy _orderBy = OrderBy.desc;
+  int _sortBy = 0;
+  int _orderBy = 0;
+  CountriesPageBloc _bloc;
 
   final ScrollController _scroller = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    this._current = widget.stats.list;
+    _bloc = CountriesPageBloc()
+      ..add(LoadCountryList(countries: widget.countries));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        title: Text(
-          "COUNTRIES",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        actions: <Widget>[
-          FlatButton(
-            child: Text('Sort'),
-            onPressed: () => showDialog(
-              context: context,
-              builder: (BuildContext context) => SortbyDialog(
-                list: _current,
-                sortBy: _sortBy,
-                orderBy: _orderBy,
-                stateSetter: (SortBy sortBy, OrderBy orderBy,
-                        List<CountryStats> stats) =>
-                    setState(
-                  () {
-                    _sortBy = sortBy;
-                    _orderBy = orderBy;
-                    _current = stats;
-                    _scroller.animateTo(
-                      0.0,
-                      curve: Curves.fastLinearToSlowEaseIn,
-                      duration: const Duration(seconds: 1),
-                    );
-                  },
+    return BlocBuilder<CountriesPageBloc, CountriesPageState>(
+      bloc: _bloc,
+      builder: (context, state) {
+        return Scaffold(
+            backgroundColor: Colors.black,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0.0,
+              bottom: PreferredSize(
+                preferredSize: Size.fromHeight(0),
+                child: SizedBox(
+                  height: 48,
+                  child: Container(
+                    padding: EdgeInsets.fromLTRB(24, 0, 24, 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text('COUNTRY / TERRITORY',
+                            style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                        InkWell(
+                          onTap: () {
+                            setState(() {
+                              if (_orderBy == 0)
+                                this._orderBy = 1;
+                              else
+                                this._orderBy = 0;
+                            });
+                            _bloc.add(OrderCountryList(
+                                orderBy: OrderBy.values[_orderBy]));
+                            _scroller.animateTo(
+                              0.0,
+                              curve: Curves.fastLinearToSlowEaseIn,
+                              duration: const Duration(milliseconds: 1000),
+                            );
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
+                            child: Row(
+                              children: <Widget>[
+                                Text(
+                                  widget.sortLabels[_sortBy].toUpperCase(),
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                                SizedBox(width: 5),
+                                (_orderBy == 0)
+                                    ? Icon(
+                                        FeatherIcons.arrowDownCircle,
+                                        size: 14,
+                                        color: Colors.white.withOpacity(0.6),
+                                      )
+                                    : Icon(
+                                        FeatherIcons.arrowUpCircle,
+                                        size: 14,
+                                        color: Colors.white.withOpacity(0.6),
+                                      )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-      body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
-        child: ListView.separated(
-            controller: _scroller,
-            itemCount: _current.length,
-            separatorBuilder: (BuildContext context, int index) =>
-                Divider(color: Colors.white38),
-            itemBuilder: (BuildContext context, int index) =>
-                _buildTile(_current[index])),
-      ),
+            body: Stack(
+              alignment: AlignmentDirectional.bottomStart,
+              children: <Widget>[
+                _buildBody(context, state),
+                Container(
+                  height: 40,
+                  color: Colors.black,
+                  padding: EdgeInsets.symmetric(horizontal: 8),
+                  child: ListView.builder(
+                    physics: ClampingScrollPhysics(),
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: widget.sortLabels.length,
+                    itemBuilder: (BuildContext context, int index) =>
+                        FlatButton(
+                      child: Text(this.widget.sortLabels[index],
+                          style: this._sortBy == index
+                              ? TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xff8fa7f4),
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withOpacity(0.6))),
+                      onPressed: () {
+                        _bloc
+                            .add(SortCountryList(sortBy: SortBy.values[index]));
+                        setState(() {
+                          this._sortBy = index;
+                          _scroller.animateTo(
+                            0.0,
+                            curve: Curves.fastLinearToSlowEaseIn,
+                            duration: const Duration(milliseconds: 1000),
+                          );
+                        });
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ));
+      },
     );
   }
 
-  Widget _buildTile(CountryStats stats) {
+  Widget _buildBody(BuildContext context, CountriesPageState state) {
+    if (state is Uninitialized) {
+      return Container();
+    } else if (state is Loaded) {
+      return _buildCountriesList(context, state.countries.list);
+    } else if (state is Wtf) {
+      return widget.buildError(
+        cause: state.exception.cause,
+        action: state.exception.action,
+      );
+    } else {
+      return widget.buildError(
+        cause: 'Something went wrong',
+        action: 'Please restart app',
+      );
+    }
+  }
+
+  Widget _buildCountriesList(BuildContext context, List list) {
+    return ListView.separated(
+      controller: _scroller,
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      itemCount: list.length,
+      separatorBuilder: (BuildContext context, int index) =>
+          Divider(color: Colors.white38),
+      itemBuilder: (BuildContext context, int index) =>
+          _buildTile(context, list[index]),
+    );
+  }
+
+  Widget _buildTile(BuildContext context, CountryStats stats) {
     return InkWell(
       onTap: () => Navigator.push(
         context,
@@ -90,133 +202,75 @@ class _CountriesPageState extends State<CountriesPage> {
         ),
       ),
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
               children: <Widget>[
                 Flags.get(stats.iso2),
                 SizedBox(
-                  width: 5,
+                  width: 8,
                 ),
-                Text(
-                  stats.country,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                ),
+                Text(stats.country,
+                    style: TextStyle(
+                        fontSize: 14, color: Colors.white.withOpacity(0.8))),
               ],
             ),
-            SizedBox(
-              height: 16,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: _buildStats(stats),
-            )
+            _buildStat(stats),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _buildStats(CountryStats stats) {
-    switch (_sortBy) {
-      case SortBy.total:
-      case SortBy.alphabetical:
-        return [
-          _buildStat(
-              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
-          _buildStat('Active', stats.active, stats.todayCases,
-              Color(0xfff5c76a).withOpacity(0.8)),
-          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
-              Color(0xffff653b).withOpacity(0.8)),
-          _buildStat('Recovered', stats.recovered, 0,
-              Color(0xff9ff794).withOpacity(0.8)),
-        ];
-      case SortBy.active:
-      case SortBy.todayActive:
-        return [
-          _buildStat('Active', stats.active, stats.todayCases,
-              Color(0xfff5c76a).withOpacity(0.8)),
-          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
-              Color(0xffff653b).withOpacity(0.8)),
-          _buildStat('Recovered', stats.recovered, 0,
-              Color(0xff9ff794).withOpacity(0.8)),
-          _buildStat(
-              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
-        ];
-      case SortBy.deaths:
-      case SortBy.todayDeaths:
-        return [
-          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
-              Color(0xffff653b).withOpacity(0.8)),
-          _buildStat('Recovered', stats.recovered, 0,
-              Color(0xff9ff794).withOpacity(0.8)),
-          _buildStat('Active', stats.active, stats.todayCases,
-              Color(0xfff5c76a).withOpacity(0.8)),
-          _buildStat(
-              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
-        ];
-      case SortBy.recovered:
-        return [
-          _buildStat('Recovered', stats.recovered, 0,
-              Color(0xff9ff794).withOpacity(0.8)),
-          _buildStat('Active', stats.active, stats.todayCases,
-              Color(0xfff5c76a).withOpacity(0.8)),
-          _buildStat('Deaths', stats.deaths, stats.todayDeaths,
-              Color(0xffff653b).withOpacity(0.8)),
-          _buildStat(
-              'Total Cases', stats.cases, 0, Colors.white.withOpacity(0.8)),
-        ];
-      default:
-        return [];
-    }
-  }
+  Widget _buildStat(CountryStats stats) {
+    String stat;
 
-  Widget _buildStat(String label, int base, int increase, Color color) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        (increase != 0)
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
-                children: <Widget>[
-                  Text(
-                    _convert(base),
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                  SizedBox(width: 2),
-                  Icon(
-                    FeatherIcons.arrowUp,
-                    size: 10,
-                  ),
-                  Text(
-                    "${_convert(increase)}",
-                    style: TextStyle(fontSize: 10, color: Colors.white),
-                  ),
-                ],
-              )
-            : Text(
-                _convert(base),
-                style: TextStyle(fontSize: 16, color: Colors.white),
-              ),
-        Text(
-          label,
-          style: TextStyle(fontSize: 10, color: color),
-        ),
-      ],
+    if (_sortBy == 0)
+      stat = _convert(stats.cases);
+    else if (_sortBy == 1)
+      stat = _convert(stats.mild);
+    else if (_sortBy == 2)
+      stat = _convert(stats.critical);
+    else if (_sortBy == 3)
+      stat = _convert(stats.recovered);
+    else if (_sortBy == 4)
+      stat = _convert(stats.deaths);
+    else if (_sortBy == 5)
+      stat = _convert(stats.todayCases);
+    else if (_sortBy == 6)
+      stat = _convert(stats.todayDeaths);
+    else if (_sortBy == 7)
+      stat = _convert(stats.casesPerMillion);
+    else if (_sortBy == 8)
+      stat = _convert(stats.deathsPerMillion);
+    else if (_sortBy == 9)
+      stat = _convert(stats.testsPerMillion);
+    else if (_sortBy == 10)
+      stat = _convert(stats.tests);
+    else if (_sortBy == 11)
+      stat = _convert(stats.tests);
+    else if (_sortBy == 12)
+      stat = _convert(stats.cases);
+    else
+      stat = '';
+
+    return Text(
+      stat,
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 
-  String _convert(int num) {
+  String _convert(num number) {
     RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
     Function mathFunc = (Match match) => '${match[1]},';
-    return num.toString().replaceAllMapped(reg, mathFunc);
+    return number.toString().replaceAllMapped(reg, mathFunc);
   }
 
   @override
