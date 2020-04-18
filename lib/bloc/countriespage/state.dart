@@ -14,9 +14,8 @@ class Uninitialized extends CountriesPageState {
 
 class Loaded extends CountriesPageState {
   final CountryList countries;
-  final SortBy sortBy;
 
-  Loaded({this.countries, this.sortBy});
+  Loaded({this.countries});
 
   @override
   String toString() => '[State] CountriesPageState: Loaded';

@@ -82,7 +82,7 @@ class _StatChart extends StatelessWidget {
         _StatTile(defaultColorList[0], 'Mild / Moderate', stats.mild),
         _StatTile(defaultColorList[1], 'Severe / Critical', stats.critical),
         _StatTile(defaultColorList[2], 'Recovered', stats.recovered),
-        _StatTile(defaultColorList[3], 'Dead', stats.deaths),
+        _StatTile(defaultColorList[3], 'Deaths', stats.deaths),
       ],
     );
   }
@@ -248,8 +248,8 @@ class CountryGraph extends StatelessWidget {
         ),
         _StatTile(
           Color(0xfff5c76a),
-          'Active',
-          stats.active,
+          'Mild',
+          stats.mild,
         ),
         _StatTile(
           Color(0xffff653b),
