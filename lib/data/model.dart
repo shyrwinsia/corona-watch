@@ -100,7 +100,7 @@ class CountryStats {
     this.tests,
     this.testsPerMillion,
   })  : this.country = country.split(',')[0],
-        this.mild = cases - deaths - recovered;
+        this.mild = cases - deaths - recovered - critical;
 
   factory CountryStats.fromJson(Map<String, dynamic> json) {
     return CountryStats(
