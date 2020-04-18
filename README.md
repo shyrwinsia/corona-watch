@@ -10,7 +10,7 @@
 
 COVID Watch is an app which shows the aggregated data of COVID-19 infections, deaths and recoveries worldwide. The app can also show the statistic of each country/territory.
 
-The data is pulled from https://worldometers.info and is updated everyday at GMT+0.
+The data is pulled from http://corona.lmao.ninja.
 
 ## Releases
 
