@@ -9,8 +9,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class RestApi {
   static const HOST = 'corona.lmao.ninja';
-  static const URL_GLOBAL = 'http://$HOST/all';
-  static const URL_COUNTRIES = 'http://$HOST/countries';
+  // static const HOST = '10.0.2.2:3000';
+  static const URL_GLOBAL = 'http://$HOST/v2/all';
+  static const URL_COUNTRIES = 'http://$HOST/v2/countries';
   static const TIMEOUT = 10; // 10s http timeout
   static const SLEEP = 1000; // 1s sleep to prevent rate-limiting
   static const TIME_UNTIL_NEXT_FETCH = 60000; // 60s caching

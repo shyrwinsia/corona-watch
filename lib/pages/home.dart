@@ -54,16 +54,11 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildLoading() {
     return Scaffold(
-      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(
-          "COVID WATCH",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
+      backgroundColor: Colors.black,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -93,11 +88,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text(
-          "COVID WATCH",
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: <Widget>[
@@ -114,9 +104,9 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBody(AppModel stats) {
     return Scaffold(
       body: [
-        SummaryPage(stats.globalStats),
-        CountriesPage(stats.countryList),
+        SummaryPage(stats.globalStats, _bloc),
         DummyPage(),
+        CountriesPage(stats.countryList),
         DummyPage(),
       ][_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -155,7 +145,7 @@ class Page {
 
 const List<Page> pages = <Page>[
   Page('Summary', FeatherIcons.barChart2),
-  Page('Countries', FeatherIcons.globe),
   Page('Watchlist', FeatherIcons.eye),
+  Page('Countries', FeatherIcons.globe),
   Page('Search', FeatherIcons.search)
 ];
