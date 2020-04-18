@@ -23,7 +23,7 @@ class CountryDetailPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Flags.get(countryStats.iso2, height: 14),
-            SizedBox(width: 6),
+            SizedBox(width: 8),
             Text(
               countryStats.country.toUpperCase(),
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -34,14 +34,9 @@ class CountryDetailPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
       ),
-      body: Container(
+      body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              CountryGraph(countryStats),
-            ]),
+        child: CountryGraph(countryStats),
       ),
     );
   }
