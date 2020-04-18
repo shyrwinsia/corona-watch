@@ -250,10 +250,6 @@ class _CountriesPageState extends State<CountriesPage> {
       stat = _convert(stats.testsPerMillion);
     else if (_sortBy == 10)
       stat = _convert(stats.tests);
-    else if (_sortBy == 11)
-      stat = _convert(stats.tests);
-    else if (_sortBy == 12)
-      stat = _convert(stats.cases);
     else
       stat = '';
 
