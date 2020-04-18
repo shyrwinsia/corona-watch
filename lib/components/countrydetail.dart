@@ -33,6 +33,16 @@ class CountryDetailPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              FeatherIcons.eyeOff,
+              size: 18,
+              color: Colors.white.withOpacity(0.6),
+            ),
+            onPressed: () {},
+          )
+        ],
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 16),
