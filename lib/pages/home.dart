@@ -4,6 +4,7 @@ import 'package:covidwatch/data/model.dart';
 import 'package:covidwatch/pages/countries.dart';
 import 'package:covidwatch/pages/dummy.dart';
 import 'package:covidwatch/pages/summary.dart';
+import 'package:covidwatch/pages/watchlist.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -105,7 +106,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: [
         SummaryPage(stats.globalStats, _bloc),
-        DummyPage(),
+        WatchlistPage(stats.countryList),
         CountriesPage(stats.countryList),
         DummyPage(),
       ][_currentIndex],
