@@ -7,7 +7,7 @@ class DummyPage extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         title: Text(
-          "DUMMY PAGE",
+          "WIP PAGE",
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         centerTitle: true,
@@ -15,7 +15,7 @@ class DummyPage extends StatelessWidget {
         elevation: 0.0,
       ),
       body: Center(
-        child: Text('Dummy Page'),
+        child: Text('This page to be implemented.'),
       ),
     );
   }
