@@ -4,11 +4,16 @@ import 'package:covidwatch/data/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 
-class CountryDetailPage extends StatelessWidget {
+class CountryDetailPage extends StatefulWidget {
   final CountryStats countryStats;
 
   CountryDetailPage({this.countryStats});
 
+  @override
+  State<StatefulWidget> createState() => CountryDetailPageState();
+}
+
+class CountryDetailPageState extends State<CountryDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,10 +27,10 @@ class CountryDetailPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Flags.get(countryStats.iso2, height: 14),
+            Flags.get(widget.countryStats.iso2, height: 14),
             SizedBox(width: 8),
             Text(
-              countryStats.country.toUpperCase(),
+              widget.countryStats.country.toUpperCase(),
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],
@@ -46,7 +51,7 @@ class CountryDetailPage extends StatelessWidget {
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16),
-        child: CountryGraph(countryStats),
+        child: CountryGraph(widget.countryStats),
       ),
     );
   }
