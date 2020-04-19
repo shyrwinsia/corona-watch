@@ -17,6 +17,7 @@ class CountryDetailPage extends StatefulWidget {
 
 class CountryDetailPageState extends State<CountryDetailPage> {
   CountryDetailsPageBloc _bloc;
+  bool _isSnackbarActive = false;
 
   @override
   void initState() {
@@ -27,6 +28,9 @@ class CountryDetailPageState extends State<CountryDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    String title = (widget.countryStats.country.length > 25)
+        ? widget.countryStats.country.substring(0, 21) + "..."
+        : widget.countryStats.country;
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -40,11 +44,9 @@ class CountryDetailPageState extends State<CountryDetailPage> {
           children: [
             Flags.get(widget.countryStats.iso2, height: 14),
             SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                widget.countryStats.country.toUpperCase(),
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
+            Text(
+              title.toUpperCase(),
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
           ],
         ),
@@ -59,15 +61,9 @@ class CountryDetailPageState extends State<CountryDetailPage> {
         bloc: _bloc,
         listener: (context, state) {
           if (state is AddedToWatchlist) {
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(
-                  '${widget.countryStats.country} added to your watchlist'),
-            ));
+            _showSnackbar(context, 'Added to your watchlist');
           } else if (state is RemovedFromWatchlist) {
-            Scaffold.of(context).showSnackBar(SnackBar(
-              content: Text(
-                  '${widget.countryStats.country} removed from your watchlist'),
-            ));
+            _showSnackbar(context, 'Removed from your watchlist');
           }
         },
         child: Padding(
@@ -85,25 +81,57 @@ class CountryDetailPageState extends State<CountryDetailPage> {
           if (state is Loaded) {
             if (!state.inWatchlist) {
               return IconButton(
-                  icon: Icon(
-                    FeatherIcons.eyeOff,
-                    size: 18,
-                    color: Colors.white.withOpacity(0.6),
-                  ),
-                  onPressed: () => _bloc
-                      .add(AddToWatchlist(name: widget.countryStats.country)));
+                icon: Icon(
+                  FeatherIcons.eye,
+                  size: 18,
+                  color: Colors.white.withOpacity(0.4),
+                ),
+                onPressed: () {
+                  if (!_isSnackbarActive) {
+                    _bloc
+                        .add(AddToWatchlist(name: widget.countryStats.country));
+                  }
+                },
+              );
             } else {
               return IconButton(
-                  icon: Icon(
-                    FeatherIcons.eye,
-                    size: 18,
-                    color: Colors.white,
-                  ),
-                  onPressed: () => _bloc.add(
-                      RemoveFromWatchlist(name: widget.countryStats.country)));
+                icon: Icon(
+                  FeatherIcons.eye,
+                  size: 18,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (!_isSnackbarActive) {
+                    _bloc.add(
+                        RemoveFromWatchlist(name: widget.countryStats.country));
+                  }
+                },
+              );
             }
           } else
             return Container();
         });
+  }
+
+  void _showSnackbar(BuildContext context, String message) {
+    if (!_isSnackbarActive) {
+      _isSnackbarActive = true;
+      Scaffold.of(context)
+          .showSnackBar(
+            SnackBar(
+              backgroundColor: Color(0xFF111111),
+              duration: Duration(milliseconds: 1500),
+              content: Text(
+                message,
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          )
+          .closed
+          .then((SnackBarClosedReason reason) {
+        // snackbar is now closed.
+        _isSnackbarActive = false;
+      });
+    }
   }
 }

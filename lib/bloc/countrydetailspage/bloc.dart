@@ -5,6 +5,7 @@ import 'package:covidwatch/data/api.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:covidwatch/logger/logger.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 part 'event.dart';
 part 'state.dart';
@@ -22,19 +23,28 @@ class CountryDetailsPageBloc
   Stream<CountryDetailsPageState> mapEventToState(
     CountryDetailsPageEvent event,
   ) async* {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> watchlist = prefs.getStringList('watchlist') ?? List();
     if (event is LoadCountryDetail) {
-      // String name = event.name;
-      // search the name here
-
-      yield Loaded(inWatchlist: false);
+      yield Loaded(inWatchlist: watchlist.contains(event.name));
+      print(watchlist);
     } else if (event is AddToWatchlist) {
+      if (!watchlist.contains(event.name)) {
+        watchlist.add(event.name);
+        prefs.setStringList('watchlist', watchlist);
+      }
       yield AddedToWatchlist();
-      // update save
       yield Loaded(inWatchlist: true);
+      print(watchlist);
     } else if (event is RemoveFromWatchlist) {
+      if (watchlist.contains(event.name)) {
+        watchlist.remove(event.name);
+        prefs.setStringList('watchlist', watchlist);
+      }
       yield RemovedFromWatchlist();
       // update save
       yield Loaded(inWatchlist: false);
+      print(watchlist);
     } else {
       getLogger().wtf('Something went wrong.');
     }
