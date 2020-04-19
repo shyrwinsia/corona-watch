@@ -210,12 +210,12 @@ class _WatchlistPageState extends State<WatchlistPage> {
               ),
               SizedBox(height: 14),
               Text(
-                'Your watchlist is empty.',
+                'Your watchlist is empty',
                 style: TextStyle(fontSize: 14, color: Colors.white),
               ),
               SizedBox(height: 2),
               Text(
-                'Go to the countries or the search page to add.',
+                'Go to the countries or the search page to add',
                 style: TextStyle(
                     fontSize: 12, color: Colors.white.withOpacity(0.6)),
                 textAlign: TextAlign.center,
