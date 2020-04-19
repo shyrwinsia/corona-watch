@@ -16,32 +16,28 @@ class SearchPageState extends State<SearchPage> {
           child: Column(
             children: <Widget>[
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Color(0xFF111111),
-                  border: Border(
-                    bottom: BorderSide(
-                      width: 1,
-                      color: Color(0xff8fa7f4).withOpacity(0.4),
-                    ),
-                  ),
+                  color: Color(0xFF222222),
                 ),
                 child: TextField(
-                  style: TextStyle(fontSize: 14),
-                  autofocus: true,
+                  style: TextStyle(fontSize: 16),
                   onChanged: (text) {
                     // send this to the bloc as event for processing
                   },
+                  cursorColor: Color(0xff8fa7f4),
                   decoration: InputDecoration(
                     fillColor: Color(0xff8fa7f4),
-                    hintText: 'Search country or territory',
+                    focusColor: Color(0xff8fa7f4),
+                    hoverColor: Color(0xff8fa7f4),
+                    hintText: 'Enter country or territory',
                     border: InputBorder.none,
                     isDense: true,
-                    hintStyle: TextStyle(fontSize: 14),
+                    hintStyle: TextStyle(fontSize: 16),
                     icon: Icon(
                       FeatherIcons.search,
                       color: Colors.white,
-                      size: 14,
+                      size: 16,
                     ),
                   ),
                 ),
