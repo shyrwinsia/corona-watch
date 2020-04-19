@@ -22,6 +22,7 @@ class SearchPageState extends State<SearchPage> {
                 ),
                 child: TextField(
                   style: TextStyle(fontSize: 16),
+                  autofocus: true,
                   onChanged: (text) {
                     // send this to the bloc as event for processing
                   },
