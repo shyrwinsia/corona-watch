@@ -40,9 +40,11 @@ class CountryDetailPageState extends State<CountryDetailPage> {
           children: [
             Flags.get(widget.countryStats.iso2, height: 14),
             SizedBox(width: 8),
-            Text(
-              widget.countryStats.country.toUpperCase(),
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            Expanded(
+              child: Text(
+                widget.countryStats.country.toUpperCase(),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
             ),
           ],
         ),
