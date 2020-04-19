@@ -27,7 +27,6 @@ class CountryDetailsPageBloc
     List<String> watchlist = prefs.getStringList('watchlist') ?? List();
     if (event is LoadCountryDetail) {
       yield Loaded(inWatchlist: watchlist.contains(event.name));
-      print(watchlist);
     } else if (event is AddToWatchlist) {
       if (!watchlist.contains(event.name)) {
         watchlist.add(event.name);
@@ -35,7 +34,6 @@ class CountryDetailsPageBloc
       }
       yield AddedToWatchlist();
       yield Loaded(inWatchlist: true);
-      print(watchlist);
     } else if (event is RemoveFromWatchlist) {
       if (watchlist.contains(event.name)) {
         watchlist.remove(event.name);
@@ -44,7 +42,6 @@ class CountryDetailsPageBloc
       yield RemovedFromWatchlist();
       // update save
       yield Loaded(inWatchlist: false);
-      print(watchlist);
     } else {
       getLogger().wtf('Something went wrong.');
     }

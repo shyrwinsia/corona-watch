@@ -5,6 +5,7 @@ import 'package:covidwatch/data/model.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class CountryDetailPage extends StatefulWidget {
   final CountryStats countryStats;
@@ -81,32 +82,30 @@ class CountryDetailPageState extends State<CountryDetailPage> {
           if (state is Loaded) {
             if (!state.inWatchlist) {
               return IconButton(
-                icon: Icon(
-                  FeatherIcons.eyeOff,
-                  size: 20,
-                  color: Colors.white.withOpacity(0.6),
-                ),
-                onPressed: () {
-                  if (!_isSnackbarActive) {
-                    _bloc
-                        .add(AddToWatchlist(name: widget.countryStats.country));
-                  }
-                },
-              );
+                  icon: Icon(
+                    FeatherIcons.eyeOff,
+                    size: 20,
+                    color: Colors.white.withOpacity(0.6),
+                  ),
+                  onPressed: () {
+                    if (!_isSnackbarActive)
+                      _bloc.add(
+                        AddToWatchlist(name: widget.countryStats.country),
+                      );
+                  });
             } else {
               return IconButton(
-                icon: Icon(
-                  FeatherIcons.eye,
-                  size: 20,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  if (!_isSnackbarActive) {
-                    _bloc.add(
-                        RemoveFromWatchlist(name: widget.countryStats.country));
-                  }
-                },
-              );
+                  icon: Icon(
+                    FeatherIcons.eye,
+                    size: 20,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    if (!_isSnackbarActive)
+                      _bloc.add(
+                        RemoveFromWatchlist(name: widget.countryStats.country),
+                      );
+                  });
             }
           } else
             return Container();
@@ -116,21 +115,19 @@ class CountryDetailPageState extends State<CountryDetailPage> {
   void _showSnackbar(BuildContext context, String message) {
     if (!_isSnackbarActive) {
       _isSnackbarActive = true;
-      Scaffold.of(context)
-          .showSnackBar(
-            SnackBar(
-              backgroundColor: Color(0xFF111111),
-              duration: Duration(milliseconds: 1500),
-              content: Text(
-                message,
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          )
-          .closed
-          .then((SnackBarClosedReason reason) {
-        // snackbar is now closed.
+      Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.TOP,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Color(0xFF222222),
+        textColor: Colors.white,
+        fontSize: 14.0,
+      );
+      // this prevents mashing the watch button until the toast is done
+      Future.delayed(const Duration(seconds: 2), () {
         _isSnackbarActive = false;
+        print(_isSnackbarActive);
       });
     }
   }
