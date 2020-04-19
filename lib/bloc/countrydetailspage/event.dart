@@ -28,14 +28,14 @@ class AddToWatchlist extends CountryDetailsPageEvent {
   List<Object> get props => [this.name];
 }
 
-class RemoveFromWatchList extends CountryDetailsPageEvent {
+class RemoveFromWatchlist extends CountryDetailsPageEvent {
   final String name;
 
-  RemoveFromWatchList({this.name});
+  RemoveFromWatchlist({this.name});
 
   @override
   String toString() =>
-      '[Event] CountryDetailsPageEvent: RemoveFromWatchList $name';
+      '[Event] CountryDetailsPageEvent: RemoveFromWatchlist $name';
 
   @override
   List<Object> get props => [this.name];

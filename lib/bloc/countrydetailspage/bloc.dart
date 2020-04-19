@@ -31,7 +31,7 @@ class CountryDetailsPageBloc
       yield AddedToWatchlist();
       // update save
       yield Loaded(inWatchlist: true);
-    } else if (event is RemoveFromWatchList) {
+    } else if (event is RemoveFromWatchlist) {
       yield RemovedFromWatchlist();
       // update save
       yield Loaded(inWatchlist: false);
