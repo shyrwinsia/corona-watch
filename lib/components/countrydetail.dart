@@ -82,9 +82,9 @@ class CountryDetailPageState extends State<CountryDetailPage> {
             if (!state.inWatchlist) {
               return IconButton(
                 icon: Icon(
-                  FeatherIcons.eye,
-                  size: 18,
-                  color: Colors.white.withOpacity(0.4),
+                  FeatherIcons.eyeOff,
+                  size: 20,
+                  color: Colors.white.withOpacity(0.6),
                 ),
                 onPressed: () {
                   if (!_isSnackbarActive) {
@@ -97,7 +97,7 @@ class CountryDetailPageState extends State<CountryDetailPage> {
               return IconButton(
                 icon: Icon(
                   FeatherIcons.eye,
-                  size: 18,
+                  size: 20,
                   color: Colors.white,
                 ),
                 onPressed: () {
