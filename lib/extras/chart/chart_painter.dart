@@ -116,7 +116,9 @@ class PieChartPainter extends CustomPainter {
     TextPainter text = TextPainter(
       text: TextSpan(
         style: this.chartTextStyle,
-        text: this.chartText,
+        text: (this.chartText.length > 25)
+            ? this.chartText.substring(0, 25) + "..."
+            : this.chartText,
       ),
       textAlign: TextAlign.center,
       textDirection: TextDirection.ltr,
