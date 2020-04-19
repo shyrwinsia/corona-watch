@@ -2,7 +2,7 @@ import 'package:covidwatch/bloc/homepage/bloc.dart';
 import 'package:covidwatch/components/error.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:covidwatch/pages/countries.dart';
-import 'package:covidwatch/pages/dummy.dart';
+import 'package:covidwatch/pages/search.dart';
 import 'package:covidwatch/pages/summary.dart';
 import 'package:covidwatch/pages/watchlist.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
         SummaryPage(stats.globalStats, _bloc),
         WatchlistPage(stats.countryList),
         CountriesPage(stats.countryList),
-        DummyPage(),
+        SearchPage(),
       ][_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
