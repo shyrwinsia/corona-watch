@@ -66,7 +66,7 @@ class _CountriesPageState extends State<CountriesPage> {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SearchPage(),
+                      builder: (context) => SearchPage(widget.countries),
                     ),
                   ),
                 ),
@@ -185,11 +185,6 @@ class _CountriesPageState extends State<CountriesPage> {
       return Container();
     } else if (state is Loaded) {
       return _buildCountriesList(context, state.countries.list);
-    } else if (state is Wtf) {
-      return widget.buildError(
-        cause: state.exception.cause,
-        action: state.exception.action,
-      );
     } else {
       return widget.buildError(
         cause: 'Something went wrong',

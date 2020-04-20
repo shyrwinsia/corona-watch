@@ -36,14 +36,3 @@ class RemovedFromWatchlist extends CountryDetailsPageState {
 
   List<Object> get props => null;
 }
-
-class Wtf extends CountryDetailsPageState {
-  final RestApiException exception;
-
-  Wtf({this.exception});
-
-  @override
-  String toString() => '[State] CountryDetailsPageState: Wtf {$exception}';
-
-  List<Object> get props => [this.exception];
-}

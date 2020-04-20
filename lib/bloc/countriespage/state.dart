@@ -22,14 +22,3 @@ class Loaded extends CountriesPageState {
 
   List<Object> get props => [this.countries];
 }
-
-class Wtf extends CountriesPageState {
-  final RestApiException exception;
-
-  Wtf({this.exception});
-
-  @override
-  String toString() => '[State] CountriesPageState: Wtf {$exception}';
-
-  List<Object> get props => [this.exception];
-}
