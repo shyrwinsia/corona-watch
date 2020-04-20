@@ -15,33 +15,43 @@ class SearchPageState extends State<SearchPage> {
         child: SafeArea(
           child: Column(
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Color(0xFF222222),
-                ),
-                child: TextField(
-                  style: TextStyle(fontSize: 16),
-                  autofocus: true,
-                  onChanged: (text) {
-                    // send this to the bloc as event for processing
-                  },
-                  cursorColor: Color(0xff8fa7f4),
-                  decoration: InputDecoration(
-                    fillColor: Color(0xff8fa7f4),
-                    focusColor: Color(0xff8fa7f4),
-                    hoverColor: Color(0xff8fa7f4),
-                    hintText: 'Enter country or territory',
-                    border: InputBorder.none,
-                    isDense: true,
-                    hintStyle: TextStyle(fontSize: 16),
-                    icon: Icon(
-                      FeatherIcons.search,
-                      color: Colors.white,
-                      size: 16,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(FeatherIcons.chevronLeft),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                      decoration: BoxDecoration(
+                          color: Color(0xFF333333),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(4),
+                          )),
+                      child: TextField(
+                        style: TextStyle(fontSize: 16),
+                        autofocus: true,
+                        onChanged: (text) {
+                          // send this to the bloc as event for processing
+                        },
+                        cursorColor: Color(0xff8fa7f4),
+                        decoration: InputDecoration(
+                          fillColor: Color(0xff8fa7f4),
+                          focusColor: Color(0xff8fa7f4),
+                          hoverColor: Color(0xff8fa7f4),
+                          hintText: 'Search country or territory',
+                          border: InputBorder.none,
+                          isDense: true,
+                          hintStyle: TextStyle(fontSize: 16),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ],
           ),
