@@ -120,15 +120,15 @@ class CountryDetailPageState extends State<CountryDetailPage> {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.TOP,
         timeInSecForIosWeb: 1,
-        backgroundColor: Color(0xFF222222),
+        backgroundColor: Color(0xFF333333),
         textColor: Colors.white,
         fontSize: 14.0,
       );
       // this prevents mashing the watch button until the toast is done
-      Future.delayed(const Duration(seconds: 2), () {
-        _isSnackbarActive = false;
-        print(_isSnackbarActive);
-      });
+      Future.delayed(
+        const Duration(seconds: 2),
+        () => _isSnackbarActive = false,
+      );
     }
   }
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:covidwatch/data/api.dart';
 import 'package:covidwatch/data/model.dart';
 import 'package:covidwatch/logger/logger.dart';
 import 'package:equatable/equatable.dart';
