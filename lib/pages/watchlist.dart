@@ -1,8 +1,8 @@
 import 'package:covidwatch/bloc/watchlistpage/bloc.dart';
-import 'package:covidwatch/components/countrydetail.dart';
 import 'package:covidwatch/components/error.dart';
 import 'package:covidwatch/components/flag.dart';
 import 'package:covidwatch/data/model.dart';
+import 'package:covidwatch/pages/countrydetail.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -68,12 +68,22 @@ class _WatchlistPageState extends State<WatchlistPage> {
     if (state is Loaded) {
       if (state.countries.list.length > 0)
         return AppBar(
+          title: Text(
+            "WATCHLIST",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          centerTitle: true,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           bottom: _buildHeader(),
         );
       else
         return AppBar(
+          title: Text(
+            "WATCHLIST",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          centerTitle: true,
           backgroundColor: Colors.transparent,
           elevation: 0.0,
         );
@@ -128,9 +138,9 @@ class _WatchlistPageState extends State<WatchlistPage> {
 
   Widget _buildHeader() {
     return PreferredSize(
-      preferredSize: Size.fromHeight(0),
+      preferredSize: Size.fromHeight(40),
       child: SizedBox(
-        height: 48,
+        height: 40,
         child: Container(
           padding: EdgeInsets.fromLTRB(24, 0, 24, 8),
           child: Row(

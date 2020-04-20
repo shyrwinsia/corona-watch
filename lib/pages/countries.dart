@@ -1,8 +1,9 @@
 import 'package:covidwatch/bloc/countriespage/bloc.dart';
-import 'package:covidwatch/components/countrydetail.dart';
 import 'package:covidwatch/components/error.dart';
 import 'package:covidwatch/components/flag.dart';
 import 'package:covidwatch/data/model.dart';
+import 'package:covidwatch/pages/countrydetail.dart';
+import 'package:covidwatch/pages/search.dart';
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,12 +53,28 @@ class _CountriesPageState extends State<CountriesPage> {
         return Scaffold(
             backgroundColor: Colors.black,
             appBar: AppBar(
+              title: Text(
+                "WORLD TALLY",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              centerTitle: true,
               backgroundColor: Colors.transparent,
-              elevation: 0.0,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(FeatherIcons.search),
+                  iconSize: 16,
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchPage(),
+                    ),
+                  ),
+                ),
+              ],
               bottom: PreferredSize(
-                preferredSize: Size.fromHeight(0),
+                preferredSize: Size.fromHeight(40),
                 child: SizedBox(
-                  height: 48,
+                  height: 40,
                   child: Container(
                     padding: EdgeInsets.fromLTRB(24, 0, 24, 8),
                     child: Row(
