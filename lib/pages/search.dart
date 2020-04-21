@@ -63,7 +63,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget _buildSearchbar(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 8),
+      padding: EdgeInsets.only(bottom: 8, right: 14),
       color: Colors.black,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
