@@ -249,7 +249,7 @@ class _WatchlistPageState extends State<WatchlistPage> {
   Widget _buildCountriesList(BuildContext context, List list) {
     return ListView.separated(
       controller: _scroller,
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.fromLTRB(16, 0, 16, 48),
       itemCount: list.length,
       separatorBuilder: (BuildContext context, int index) =>
           Divider(color: Colors.white38),
