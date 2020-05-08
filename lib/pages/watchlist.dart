@@ -100,33 +100,39 @@ class _WatchlistPageState extends State<WatchlistPage> {
         return Container(
           height: 40,
           color: Colors.black,
-          padding: EdgeInsets.symmetric(horizontal: 8),
           child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 2, vertical: 6),
             physics: ClampingScrollPhysics(),
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemCount: widget.sortLabels.length,
-            itemBuilder: (BuildContext context, int index) => FlatButton(
-              child: Text(this.widget.sortLabels[index],
-                  style: this._sortBy == index
-                      ? TextStyle(
-                          fontSize: 12,
-                          color: Color(0xff8fa7f4),
-                          fontWeight: FontWeight.bold,
-                        )
-                      : TextStyle(
-                          fontSize: 12, color: Colors.white.withOpacity(0.6))),
-              onPressed: () {
-                _bloc.add(SortCountryList(sortBy: SortBy.values[index]));
-                setState(() {
-                  this._sortBy = index;
-                  _scroller.animateTo(
-                    0.0,
-                    curve: Curves.fastLinearToSlowEaseIn,
-                    duration: const Duration(milliseconds: 1000),
-                  );
-                });
-              },
+            itemBuilder: (BuildContext context, int index) => Container(
+              padding: EdgeInsets.symmetric(horizontal: 2),
+              child: FlatButton(
+                color: this._sortBy == index
+                    ? Color(0xff8fa7f4).withOpacity(0.6)
+                    : Colors.white.withOpacity(0.2),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                child: Text(
+                  this.widget.sortLabels[index],
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                  ),
+                ),
+                onPressed: () {
+                  _bloc.add(SortCountryList(sortBy: SortBy.values[index]));
+                  setState(() {
+                    this._sortBy = index;
+                    _scroller.animateTo(
+                      0.0,
+                      curve: Curves.fastLinearToSlowEaseIn,
+                      duration: const Duration(milliseconds: 1000),
+                    );
+                  });
+                },
+              ),
             ),
           ),
         );
